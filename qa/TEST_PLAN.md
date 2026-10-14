@@ -93,3 +93,14 @@
 - 320×480结算目标文字必须在下一关按钮上方保留间距；不只检测按钮互不重叠。
 - 原生Canvas预览检查了主地图、6列道路、工具箱、手册和短屏结算；它不替代真实浏览器或真机验收。
 - 待真实环境继续检查：iOS/Android动态视口、刘海和宿主胶囊、声音、真实字体、触控、性能及抖音编译。
+
+
+## 0.3.0 Campaign acceptance
+
+- Exactly 50 fixed levels. Preserve baseline first-ten data digest. Replay every initial solution with zero coins, tools or revival, following exact authored paths. Verify 50 unique route topologies; 20 crane levels, including 10 requiring panel reuse after the first vehicle.
+- Exercise actual shipped standalone HTML via its browser adapter at eight viewports (including 320px plus safe insets). All 50 solutions use pointer events; no debug state mutation. All new panels additionally check >=44 CSS pixels, safe containment and nonoverlapping hitboxes at four extreme viewports.
+- Demonstrate all 40 finite-budget stages can stop from player errors and freely restart. Exhaust work without refund-through-undo; allow one optional recovery, never require it for the initial solution.
+- Economy: first clear pays20 exactly once, replays and delivery undo cannot duplicate; limited work tool costs12 once/run, revival costs20 once/run. Currency underflow/invalid saves/legacy migration/storage denial covered. Coins are local only, no purchases.
+- Reward SDK adapter: default disabled, no real ad IDs. Test four explicit mock results, busy rejection, close validation, duplicate/stale callback, count-only share rejection, rejected/throwing show, timeout, cancellation, cleanup-await and failed cleanup. Restart/background/destroy must not leave locked gameplay or late rewards.
+- Native Canvas approximate screenshots reviewed with registered Noto CJK: 390x844 and320x480 main, crane, brake animation, failure, mock-ad choices, revived play, all chapter tabs, result and tool shop. These are not browser/phone screenshots.
+- Not completed: independent current-version reviewer, real browser audio/pixels, touchscreen/device UI, official Douyin tools or real SDK callbacks. Real ads and public upload remain disabled/out of scope.

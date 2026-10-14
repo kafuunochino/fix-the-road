@@ -1,0 +1,81 @@
+{
+  "version": "0.3.0",
+  "reviewDate": "2026-10-14",
+  "levelCount": 50,
+  "baselineCommit": "e82c44f1c243f9be1a61349ffbd81c62c0260ee5",
+  "baselineFirstTenDataSha256": "76e9eda980c059750b3f00d4d2e18fca4d3079bead17d0d927a91e2f50e500c8",
+  "baselineRestoration": {
+    "runtimeAndDocumentationBlobsMatched": 35,
+    "unmaterializedUnchangedAsset": "listing/assets/icon-source-v1.png",
+    "assetRetainedInRemoteBaseTree": true
+  },
+  "testCommand": "npm run check",
+  "tests": {
+    "tests": 198,
+    "pass": 198,
+    "fail": 0
+  },
+  "referenceProof": "artifacts/campaign-solutions.json",
+  "referenceSolutions": 50,
+  "uniqueRouteTopologies": 50,
+  "allInitialLevelsSolvableWithoutRewards": true,
+  "newMechanics": [
+    "limited construction work",
+    "nonrefundable labor on undo",
+    "limited failed dispatches",
+    "modular road panel craning",
+    "reuse first-delivery route panels for second route"
+  ],
+  "economy": {
+    "localOnly": true,
+    "firstClearCoins": 20,
+    "replayCoins": 0,
+    "workToolPrice": 12,
+    "workToolAmount": 6,
+    "workToolLimitPerRun": 1,
+    "revivePrice": 20,
+    "reviveWork": 10,
+    "reviveLimitPerRun": 1,
+    "realMoney": false,
+    "freeRestart": true
+  },
+  "ads": {
+    "ttMode": "disabled",
+    "realAdUnitIdConfigured": false,
+    "browserMode": "explicit mock results only",
+    "realSdkValidated": false,
+    "contract": "docs/REWARDED_AD_CONTRACT.md"
+  },
+  "qa": {
+    "exactHtmlPointerRegression": true,
+    "allFiftyAtEightViewports": true,
+    "minimumActiveTargetCssPixels": 44,
+    "newPanelsFourViewportsNoOverlap": true,
+    "nativeCanvasPixelsViewed": true,
+    "nativeCanvasFont": "Noto Sans CJK SC",
+    "nativeCanvasScreens": [
+      "main",
+      "crane",
+      "braking smoke",
+      "failure",
+      "mock results",
+      "revival",
+      "chapters",
+      "short-screen win",
+      "tool shop"
+    ],
+    "independentCurrentVersionReview": false,
+    "realBrowser": false,
+    "realPhone": false,
+    "officialDouyinTool": false
+  },
+  "standalone": {
+    "path": "deliverables/fix-the-road-demo.html",
+    "bytes": 90526,
+    "sha256": "c60987738c3dcae1a9313388fb2437ed3f1385cfef1c2428d34826e777af2ac7"
+  },
+  "candidateManifestSha256": "61bd27d00f3d4d278281170ca8d46d06f8858d4b0ca9d7774b1224cbe5d03719",
+  "candidateGameSha256": "0df6f07e46a8f2af9bc825f23ad0482df1ac6c594bc631d62182b9f6c67f1e24",
+  "uploaded": false,
+  "published": false
+}

@@ -53,36 +53,60 @@ export function traceRoute(level, board, vehicle) {
 }
 
 export function createState(level) {
-  return { levelId: level.id, board: copyBoard(level.board), nextVehicle: 0, moves: 0, history: [] };
+  return { levelId: level.id, board: copyBoard(level.board), nextVehicle: 0, moves: 0, history: [], workSpent: 0, budget: level.budget ?? null, incidents: 0, incidentLimit: level.incidentLimit ?? null, failed: null, revived: false, toolUsed: false };
 }
 function remember(state) {
   return { board: copyBoard(state.board), nextVehicle: state.nextVehicle, moves: state.moves };
 }
 export function turnTile(state, index) {
+  if (state.failed) return state;
   if (!Number.isInteger(index) || !isEditable(state.board[index])) return state;
+  if (state.budget !== null && state.workSpent >= state.budget) return { ...state, failed: 'budget' };
   const board = copyBoard(state.board), tile = board[index];
   if (tile.type === 'switch') tile.switchState = tile.switchState === 0 ? 1 : 0;
   else tile.rotation = mod4(tile.rotation + 1);
-  return { ...state, board, moves: state.moves + 1, history: [...state.history, remember(state)] };
+  return { ...state, board, moves: state.moves + 1, workSpent: state.budget===null?0:state.workSpent + 1, history: [...state.history, remember(state)] };
 }
 export function dispatch(state, level) {
   if (state.levelId !== level.id) return { state, result: { ok: false, reason: 'wrong_level', path: [] } };
+  if (state.failed) return { state, result: { ok: false, reason: state.failed, path: [] } };
   const result = traceRoute(level, state.board, level.vehicles[state.nextVehicle]);
-  if (!result.ok) return { state, result };
+  if (!result.ok) {
+    if (state.incidentLimit === null) return { state, result };
+    const incidents = state.incidents + 1;
+    return { state: { ...state, incidents, failed: incidents >= state.incidentLimit ? 'incidents' : null }, result };
+  }
   return { result, state: { ...state, nextVehicle: state.nextVehicle + 1, history: [...state.history, remember(state)] } };
 }
 export function undo(state) {
-  if (!state.history.length) return state;
+  if (state.failed || !state.history.length) return state;
   const previous = state.history.at(-1);
   return { ...state, ...previous, board: copyBoard(previous.board), history: state.history.slice(0, -1) };
 }
 export const isComplete = (state, level) => state.nextVehicle >= level.vehicles.length;
 export function starsFor(moves, par) { return moves <= par ? 3 : moves <= par + 6 ? 2 : 1; }
 
-/** Normalize saved data; never trust localStorage shape or numeric ranges. */
+/** A marked modular road panel may be craned into an empty foundation. */
+export function movePanel(state, from, to) {
+  if (state.failed || from === to || !Number.isInteger(from) || !Number.isInteger(to)) return state;
+  const tile=state.board[from];
+  if (!tile?.movable || !['straight','bend'].includes(tile.type) || state.board[to]?.type !== 'socket') return state;
+  if (state.budget !== null && state.workSpent >= state.budget) return { ...state, failed: 'budget' };
+  const board=copyBoard(state.board); board[to]={...tile}; board[from]={type:'socket'};
+  return {...state,board,moves:state.moves+1,workSpent:state.workSpent+1,history:[...state.history,remember(state)]};
+}
+export function reviveState(state) {
+  if (!state.failed || state.revived) return state;
+  return {...state,failed:null,revived:true,budget:state.budget===null?null:Math.max(state.budget,state.workSpent)+10,incidents:0,history:[]};
+}
+export function useWorkTool(state) {
+  if (state.failed || state.toolUsed || state.budget===null) return state;
+  return {...state,toolUsed:true,budget:state.budget+6};
+}
+/** Version 1 saves migrate without losing clears. No server / money economy. */
 export function normalizeProgress(value, levelIds) {
-  const safe = { version: 1, completed: [], bestMoves: {}, sound: false, lastLevel: 1 };
-  if (!value || typeof value !== 'object' || value.version !== 1) return safe;
+  const safe = { version: 2, completed: [], bestMoves: {}, sound: false, lastLevel: 1, coins: 0 };
+  if (!value || typeof value !== 'object' || ![1,2].includes(value.version)) return safe;
   safe.completed = [...new Set(Array.isArray(value.completed) ? value.completed.filter(id => levelIds.includes(id)) : [])];
   for (const id of safe.completed) {
     const n = value.bestMoves?.[id];
@@ -90,5 +114,14 @@ export function normalizeProgress(value, levelIds) {
   }
   safe.sound = value.sound === true;
   if (levelIds.includes(value.lastLevel)) safe.lastLevel = value.lastLevel;
+  safe.coins=value.version===1?safe.completed.length*20:(Number.isInteger(value.coins)&&value.coins>=0?Math.min(value.coins,12000):0);
   return safe;
+}
+export function awardVictory(progress, level, moves) {
+  const first=!progress.completed.includes(level.id);
+  return {...progress,completed:first?[...progress.completed,level.id]:[...progress.completed],bestMoves:{...progress.bestMoves,[level.id]:Math.min(progress.bestMoves[level.id]??Infinity,moves)},coins:Math.min(12000,progress.coins+(first?20:0))};
+}
+export function spendCoins(progress, amount) {
+  if (!Number.isInteger(amount)||amount<=0||progress.coins<amount) return null;
+  return {...progress,coins:progress.coins-amount};
 }

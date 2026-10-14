@@ -21,7 +21,7 @@ function makePlatform({levelId=1, storageThrows=false, sidebar}={}) {
 
 for(const level of LEVELS)test(`Canvas flow completes level ${level.id} using only pointer actions`,()=>{
   const app=makePlatform({levelId:level.id});
-  for(const action of level.solution){if(action.type==='turn')app.tap(`tile-${action.index}`);else{app.tap('dispatch');app.finish();}}
+  for(const action of level.solution){if(action.type==='turn')app.tap(`tile-${action.index}`);else if(action.type==='move'){app.tap('crane');app.tap(`tile-${action.from}`);app.tap(`tile-${action.to}`);app.tap('crane');}else{app.tap('dispatch');app.finish();}}
   const state=app.game.getSnapshot();assert.equal(state.complete,true);assert.equal(state.modal,'win');assert.equal(state.moves,level.par);assert.ok(JSON.parse(app.data.get('fix-the-road-v1')).completed.includes(level.id));
   app.tap('replay');assert.equal(app.game.getSnapshot().complete,false);assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
 });

@@ -1,9 +1,9 @@
 {
   "name": "fix-the-road",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "修好这条路：双车接力道路旋转解谜浏览器测试版",
+  "description": "城市复线：50关道路调度与模块化施工离线Demo",
   "scripts": {
     "test": "node scripts/build.mjs && node --test",
     "serve": "node server.mjs",

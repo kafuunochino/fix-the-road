@@ -12,9 +12,10 @@ const graph={
   'src/rules.js':[],
   'src/levels.js':['src/rules.js'],
   'src/canvas-game.js':['src/levels.js','src/rules.js'],
-  'adapters/browser.js':[],
+  'adapters/rewarded.js':[],
+  'adapters/browser.js':['adapters/rewarded.js'],
   'adapters/douyin-sidebar.js':[],
-  'adapters/tt.js':['adapters/douyin-sidebar.js']
+  'adapters/tt.js':['adapters/rewarded.js','adapters/douyin-sidebar.js']
 };
 const exported=new Map();
 const source=new Map();
@@ -40,7 +41,7 @@ const wav=await readFile(path.join(root,'assets/tap.wav'));
 const audioNames=['turn','switch','send','win','error'];
 const ttAudio=Object.fromEntries(audioNames.map(name=>[name,'assets/tap.wav']));
 const ttEntry=`const platform=createTTPlatform(tt,{requestAnimationFrame,cancelAnimationFrame},${JSON.stringify(ttAudio)});\nstartGame(platform);`;
-const ttCode=assemble([...core,'adapters/douyin-sidebar.js','adapters/tt.js'],ttEntry);new vm.Script(ttCode,{filename:'game.js'});
+const ttCode=assemble([...core,'adapters/rewarded.js','adapters/douyin-sidebar.js','adapters/tt.js'],ttEntry);new vm.Script(ttCode,{filename:'game.js'});
 const out=path.join(root,'dist/douyin');await mkdir(path.join(out,'assets'),{recursive:true});
 await writeFile(path.join(out,'game.js'),ttCode);
 await writeFile(path.join(out,'game.json'),JSON.stringify({deviceOrientation:'portrait',showStatusBar:false,menuButtonStyle:'light'},null,2)+'\n');
@@ -48,9 +49,9 @@ await writeFile(path.join(out,'project.config.json'),JSON.stringify({description
 await copyFile(path.join(root,'assets/tap.wav'),path.join(out,'assets/tap.wav'));
 const browserAudio=Object.fromEntries(audioNames.map(name=>[name,`data:audio/wav;base64,${wav.toString('base64')}`]));
 const browserEntry=`const platform=createBrowserPlatform(document.getElementById('game'),window,${JSON.stringify(browserAudio)});\nconst game=startGame(platform);\nwindow.roadDemo={getSnapshot:game.getSnapshot};\nwindow.addEventListener('pagehide',event=>{if(!event.persisted){game.destroy();platform.destroy();}});`;
-const browserCode=assemble([...core,'adapters/browser.js'],browserEntry);new vm.Script(browserCode,{filename:'demo.js'});
+const browserCode=assemble([...core,'adapters/rewarded.js','adapters/browser.js'],browserEntry);new vm.Script(browserCode,{filename:'demo.js'});
 if(/<\/script/i.test(browserCode))throw Error('Unexpected script closing sequence in source');
-const html=`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102c40"><title>修好这条路 · 手机施工版 0.2.0</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102c40}canvas{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>${browserCode}</script></body></html>\n`;
+const html=`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102c40"><title>修好这条路 · 城市复线 · 50关 0.3.0</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102c40}canvas{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>${browserCode}</script></body></html>\n`;
 await mkdir(path.join(root,'deliverables'),{recursive:true});await writeFile(path.join(root,'deliverables/fix-the-road-demo.html'),html);
 const hashes={};
 for(const file of ['game.js','game.json','project.config.json','assets/tap.wav'])hashes[file]=createHash('sha256').update(await readFile(path.join(out,file))).digest('hex');

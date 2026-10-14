@@ -13,20 +13,20 @@ const viewports=[
  {width:430,height:932,safeInsets:{top:59,right:0,bottom:34,left:0}},
  {width:1440,height:900,safeInsets:{top:0,right:0,bottom:0,left:0}}
 ];
-for(const viewport of viewports)test(`phone HUD ${viewport.width}x${viewport.height}: exact HTML, ten levels, safe areas, 44px targets and all in-Canvas panels`,()=>{
+for(const viewport of viewports)test(`phone HUD ${viewport.width}x${viewport.height}: exact HTML, fifty levels, safe areas, 44px targets and all in-Canvas panels`,()=>{
  const h=createPhoneHarness(viewport);
- assert.equal(h.snapshot().design,'road-crew-phone-v3');assert.equal(h.snapshot().transform.scale,1);
+ assert.equal(h.snapshot().design,'road-city-reconnect-v4');assert.equal(h.snapshot().transform.scale,1);
  const body=h.html.match(/<body>([\s\S]*?)<\/body>/)[1].replace(/<script>[\s\S]*?<\/script>/,'').replace(/<canvas\b[^>]*>[\s\S]*?<\/canvas>/,'').trim();assert.equal(body,'','No visible UI outside Canvas');
  assert.doesNotMatch(h.html,/https?:\/\/|\bfetch\s*\(|\bimport\s*\(|<script[^>]+src=/);
  for(const level of LEVELS){
   h.tap('levels');h.assertTargets();h.tap(`level-${level.id}`);h.assertTargets();
-  for(const action of level.solution){if(action.type==='turn')h.tap(`tile-${action.index}`);else{h.tap('dispatch');h.finish();}}
+  for(const action of level.solution){h.action(action);}
   assert.equal(h.snapshot().complete,true);assert.equal(h.snapshot().moves,level.par);h.assertTargets();h.tap('replay');
  }
  h.tap('tools');h.assertTargets();h.tap('sound');assert.equal(JSON.parse(h.store.get('fix-the-road-v1')).sound,true);
  h.tap('help');h.assertTargets();assert.ok(!h.snapshot().hitTargets.some(b=>b.id.startsWith('tile-')));h.tap('close-help');
  h.tap('tools');h.tap('hint');assert.equal(h.snapshot().modal,null);h.tap('tools');h.tap('reset');h.assertTargets();
- assert.equal(JSON.parse(h.store.get('fix-the-road-v1')).completed.length,10);h.destroy();
+ assert.equal(JSON.parse(h.store.get('fix-the-road-v1')).completed.length,50);h.destroy();
 });
 test('exact HTML: dual delivery undo, replay, side-panel interruption and storage-denied fallback',()=>{
  const h=createPhoneHarness();h.tap('levels');h.tap('level-5');const actions=LEVELS[4].solution;let i=0;
@@ -43,7 +43,7 @@ test('exact HTML: safe-area-only resize invalidates gestures and persisted pageh
 });
 test('short-screen result text stays above next-stage controls',()=>{
  const h=createPhoneHarness({width:320,height:480,safeInsets:{top:24,right:0,bottom:20,left:0}});h.tap('levels');h.tap('level-10');
- for(const action of LEVELS[9].solution){if(action.type==='turn')h.tap(`tile-${action.index}`);else{h.tap('dispatch');h.finish();}}
+ for(const action of LEVELS[9].solution){h.action(action);}
  const next=h.snapshot().hitTargets.find(b=>b.id==='next'),goal=h.texts.find(t=>String(t[0]).startsWith('三星目标'));
  assert.equal(JSON.parse(h.store.get('fix-the-road-v1')).completed.length,1);assert.ok(!h.texts.some(t=>String(t[0]).includes('整座路网已经恢复畅通')),'Completing stage ten alone must not claim all stages cleared');
  assert.ok(goal);assert.ok(goal[2]+8<=next.y-16,'Goal text has at least sixteen logical pixels above action');h.assertTargets();h.destroy();

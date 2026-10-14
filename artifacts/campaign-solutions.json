@@ -1,0 +1,9445 @@
+{
+  "version": "0.3.0",
+  "date": "2026-10-14",
+  "method": "Pure rules reference replay; initial solvability proof, not optimality proof",
+  "allInitialStagesSolvableWithoutRewards": true,
+  "stages": [
+    {
+      "id": 1,
+      "title": "第一份早餐",
+      "chapter": 1,
+      "size": 4,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 4,
+      "craneMoves": 0,
+      "topologySha256": "f335be3eb0844a66cf809b0ea29d0ca34e4a6f1b44c3f27ac3ba1c17e91a59d8",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 2,
+      "title": "拐个弯就到了",
+      "chapter": 1,
+      "size": 4,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 7,
+      "craneMoves": 0,
+      "topologySha256": "ebbea175f2217713d2c674b510e44f7a1721145c7e346463ee881c8724504824",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 3,
+      "title": "绕过小公园",
+      "chapter": 1,
+      "size": 5,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 20,
+      "craneMoves": 0,
+      "topologySha256": "48885b4599ae0feddc1b4f9ca0a4c62919152de19058949d06d0cab6b6b2143d",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 4,
+      "title": "小镇慢慢醒来",
+      "chapter": 1,
+      "size": 5,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 10,
+      "craneMoves": 0,
+      "topologySha256": "bc4468a6e9220d3997d6d36f470d7e38b4161393448ee15a241fc9fbe6104256",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 5,
+      "title": "一个路口，两份心意",
+      "chapter": 1,
+      "size": 5,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 6,
+      "craneMoves": 0,
+      "topologySha256": "d78a920f92d949443b796f24f6fc73d755912fbeda9dd51e34057b9b2ab06204",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 6,
+      "title": "早餐向北，花向南",
+      "chapter": 1,
+      "size": 5,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 21,
+      "craneMoves": 0,
+      "topologySha256": "6f97211cf6539ea8dac72fb58567843dfa141175fd7c14b67111aa6bdb7dacd5",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 7,
+      "title": "穿过社区的礼物",
+      "chapter": 1,
+      "size": 5,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 16,
+      "craneMoves": 0,
+      "topologySha256": "f0230c2c382ea0c14e34c8788389f5aa34c4d5c7bb2f07f417198ef55c6443a1",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 8,
+      "title": "今天去远一点",
+      "chapter": 1,
+      "size": 6,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 14,
+      "craneMoves": 0,
+      "topologySha256": "d62635d673eff558c09ccacb7a452bb84947982e50b343a49e7f713a81c04079",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 9,
+      "title": "不走错的约定",
+      "chapter": 1,
+      "size": 6,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 38,
+      "craneMoves": 0,
+      "topologySha256": "c86682c1d41972c611a594a4629146067c48a26e057bba3531e0831f4719a468",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 10,
+      "title": "让整座小镇动起来",
+      "chapter": 1,
+      "size": 6,
+      "budget": null,
+      "incidentLimit": null,
+      "referenceWork": 22,
+      "craneMoves": 0,
+      "topologySha256": "686281ac37013dfa6b78eae0a7b0f2f67148f3626bd4369273c2f739d6ef068c",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 11,
+      "title": "夜班开工",
+      "chapter": 2,
+      "size": 5,
+      "budget": 14,
+      "incidentLimit": 3,
+      "referenceWork": 6,
+      "craneMoves": 0,
+      "topologySha256": "f2708d7719196088a0d575df8c0745bb9289adf6c218f08012724e77e5036705",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 12,
+      "title": "沿河抢修",
+      "chapter": 2,
+      "size": 5,
+      "budget": 28,
+      "incidentLimit": 3,
+      "referenceWork": 21,
+      "craneMoves": 0,
+      "topologySha256": "a921c4fe85a04447ab61b5b15e9f1690c9bc55a02e56d57f522d5ee35f579d80",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 13,
+      "title": "高架引道",
+      "chapter": 2,
+      "size": 5,
+      "budget": 10,
+      "incidentLimit": 3,
+      "referenceWork": 4,
+      "craneMoves": 0,
+      "topologySha256": "cece9a3b4792e810515050f2c28e87a8b56d4e86c507c521190cb9118bb38365",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 14,
+      "title": "环城匝道",
+      "chapter": 2,
+      "size": 5,
+      "budget": 16,
+      "incidentLimit": 3,
+      "referenceWork": 11,
+      "craneMoves": 0,
+      "topologySha256": "298b3876e99fec44867b404264f736b4c82042a10a85df8946ad8e2e8b5ccfba",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 15,
+      "title": "港区绕行",
+      "chapter": 2,
+      "size": 5,
+      "budget": 29,
+      "incidentLimit": 3,
+      "referenceWork": 25,
+      "craneMoves": 0,
+      "topologySha256": "930780d06ac0b236a091608fdf2851c4837cb5e82f2533c84e7862817c2a6ba6",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            2
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 16,
+      "title": "错峰运输",
+      "chapter": 2,
+      "size": 6,
+      "budget": 24,
+      "incidentLimit": 3,
+      "referenceWork": 20,
+      "craneMoves": 0,
+      "topologySha256": "694439808f05b7202914cb46e8d6f0bcc8dcca0d4036a8b1c274ca8b5049f01c",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 17,
+      "title": "雨后便道",
+      "chapter": 2,
+      "size": 6,
+      "budget": 17,
+      "incidentLimit": 3,
+      "referenceWork": 13,
+      "craneMoves": 0,
+      "topologySha256": "6feee03658e4fae432cdc2a0a9d9be525c7fb5e7f38d1cffe4cafaf18eae1c8c",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 18,
+      "title": "隧道出口",
+      "chapter": 2,
+      "size": 6,
+      "budget": 41,
+      "incidentLimit": 3,
+      "referenceWork": 37,
+      "craneMoves": 0,
+      "topologySha256": "e0cd15a740cc265c6b087be02d478945f35d24fdd5e6dfd61af77322af5f050f",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 19,
+      "title": "老街接驳",
+      "chapter": 2,
+      "size": 6,
+      "budget": 24,
+      "incidentLimit": 3,
+      "referenceWork": 20,
+      "craneMoves": 0,
+      "topologySha256": "3dd77a5fb111070652da55aa37af304e98ec5564f9a9a7ca8adc00755475247c",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "turn",
+          "index": 5
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            5
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            2,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 20,
+      "title": "东岸交付",
+      "chapter": 2,
+      "size": 6,
+      "budget": 19,
+      "incidentLimit": 3,
+      "referenceWork": 15,
+      "craneMoves": 0,
+      "topologySha256": "5c13983ff4d8da30bde81c13e1befc4386aa200791aed33cccb9ffe5ef26535d",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 21,
+      "title": "双线调度",
+      "chapter": 3,
+      "size": 6,
+      "budget": 45,
+      "incidentLimit": 3,
+      "referenceWork": 39,
+      "craneMoves": 0,
+      "topologySha256": "0aee0983d26352aaf4e54447cc096ce9e730e8b0396c3d14275194af8cd97505",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 22,
+      "title": "共用咽喉",
+      "chapter": 3,
+      "size": 6,
+      "budget": 23,
+      "incidentLimit": 3,
+      "referenceWork": 18,
+      "craneMoves": 0,
+      "topologySha256": "a1e50963fbb7422100af4b09fe394f6d46a21a7cecde5f988f7ed17e6c7f9a6a",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 23,
+      "title": "岔口窗口",
+      "chapter": 3,
+      "size": 6,
+      "budget": 20,
+      "incidentLimit": 3,
+      "referenceWork": 16,
+      "craneMoves": 0,
+      "topologySha256": "f0caa0a1ecde62e0d7130736efb63a4130c7988a08e62a65c88ac9017d897816",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 24,
+      "title": "物流节点",
+      "chapter": 3,
+      "size": 6,
+      "budget": 37,
+      "incidentLimit": 3,
+      "referenceWork": 34,
+      "craneMoves": 0,
+      "topologySha256": "1ca89f665b8edbd13ecebdcecd2ef7c7c6e66f411cbf3f64a154773845f447f0",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 25,
+      "title": "工厂换班",
+      "chapter": 3,
+      "size": 6,
+      "budget": 27,
+      "incidentLimit": 3,
+      "referenceWork": 24,
+      "craneMoves": 0,
+      "topologySha256": "6abd125a314072468f7464eebef0aa9c6dc2f679e4ff2bec8b885422fa383b6f",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 26,
+      "title": "仓区绕行",
+      "chapter": 3,
+      "size": 6,
+      "budget": 17,
+      "incidentLimit": 3,
+      "referenceWork": 14,
+      "craneMoves": 0,
+      "topologySha256": "eb0a75294562feca08ea5d1c14eb2176ae356c31f0f185740cd9260302c6b2e1",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 27,
+      "title": "东西接力",
+      "chapter": 3,
+      "size": 6,
+      "budget": 35,
+      "incidentLimit": 3,
+      "referenceWork": 32,
+      "craneMoves": 0,
+      "topologySha256": "6816d428ca5cce56209b70ec41a3e01e31998b700efa8bb727c114745a081056",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 28,
+      "title": "滨河分流",
+      "chapter": 3,
+      "size": 6,
+      "budget": 19,
+      "incidentLimit": 3,
+      "referenceWork": 16,
+      "craneMoves": 0,
+      "topologySha256": "cecd255a4bd435891b5ef9b68a05026285ea9b9b9786eccc3b6b63382b331fac",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            3,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 29,
+      "title": "立交之下",
+      "chapter": 3,
+      "size": 6,
+      "budget": 19,
+      "incidentLimit": 3,
+      "referenceWork": 16,
+      "craneMoves": 0,
+      "topologySha256": "b838808dbc18b830130c06d9855a51cc3dfaf111653b3887fe8d40703eada36c",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 30,
+      "title": "环港调度",
+      "chapter": 3,
+      "size": 6,
+      "budget": 36,
+      "incidentLimit": 3,
+      "referenceWork": 33,
+      "craneMoves": 0,
+      "topologySha256": "5228ae0b4ec5c3d1b0baa4500659dfe28017935407933a2a2ada757b3bcb8c92",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 31,
+      "title": "吊装初试",
+      "chapter": 4,
+      "size": 6,
+      "budget": 18,
+      "incidentLimit": 2,
+      "referenceWork": 13,
+      "craneMoves": 1,
+      "topologySha256": "ba4b82547360777670a33e7456b7afab26c914fdbbc8ab9ad5f4f8e2e09a97fa",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 31
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 32,
+      "title": "拼装便道",
+      "chapter": 4,
+      "size": 6,
+      "budget": 20,
+      "incidentLimit": 2,
+      "referenceWork": 16,
+      "craneMoves": 1,
+      "topologySha256": "d5804f0ce56869e7c853f551362fd07f48be55c172c832d1b4a8c8b3b0cf134a",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 18
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 33,
+      "title": "空槽接续",
+      "chapter": 4,
+      "size": 6,
+      "budget": 28,
+      "incidentLimit": 2,
+      "referenceWork": 25,
+      "craneMoves": 1,
+      "topologySha256": "2324a34f6fb1bdc718974943b855baa1d77119ff5a3575b6c6ea0be4806108f4",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 4,
+          "to": 1
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 34,
+      "title": "路板回收",
+      "chapter": 4,
+      "size": 6,
+      "budget": 23,
+      "incidentLimit": 2,
+      "referenceWork": 21,
+      "craneMoves": 1,
+      "topologySha256": "2eb6efc20b663e3465c627175f23f428a7cd1fcd4e027974574ff88d90ea1f4c",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 18
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 35,
+      "title": "桥面拼接",
+      "chapter": 4,
+      "size": 6,
+      "budget": 19,
+      "incidentLimit": 2,
+      "referenceWork": 17,
+      "craneMoves": 2,
+      "topologySha256": "9ae238a3d6c769b35a051896bb5153b49c6f2f1ba53953a961cc0ee22d7f33c4",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 1
+        },
+        {
+          "type": "move",
+          "from": 4,
+          "to": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 36,
+      "title": "借道施工",
+      "chapter": 4,
+      "size": 6,
+      "budget": 38,
+      "incidentLimit": 2,
+      "referenceWork": 36,
+      "craneMoves": 2,
+      "topologySha256": "0a365a1aa7454f95c48f8914d19490b7e2b0c137a71dfd1bf1cd87eea1c2f114",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 33
+        },
+        {
+          "type": "move",
+          "from": 1,
+          "to": 29
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 37,
+      "title": "临时栈桥",
+      "chapter": 4,
+      "size": 6,
+      "budget": 18,
+      "incidentLimit": 2,
+      "referenceWork": 16,
+      "craneMoves": 2,
+      "topologySha256": "b1d24c1c84869a6909731850115e470911eee96b6c70373d3c59b18a4b81bb0a",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 17
+        },
+        {
+          "type": "move",
+          "from": 1,
+          "to": 33
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 38,
+      "title": "钢板换位",
+      "chapter": 4,
+      "size": 6,
+      "budget": 24,
+      "incidentLimit": 2,
+      "referenceWork": 22,
+      "craneMoves": 2,
+      "topologySha256": "bb3216aa4291a2a902eb85e971c9dc98961948dc0307d2a49e5c709c38d019c3",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 5,
+          "to": 0
+        },
+        {
+          "type": "move",
+          "from": 11,
+          "to": 13
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 39,
+      "title": "双段接驳",
+      "chapter": 4,
+      "size": 6,
+      "budget": 37,
+      "incidentLimit": 2,
+      "referenceWork": 35,
+      "craneMoves": 2,
+      "topologySha256": "5112957e9ded1a0ca04bcc94c03b7db9a16550d5bdb7b8ae7303d2d456d6df92",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 8
+        },
+        {
+          "type": "move",
+          "from": 1,
+          "to": 18
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 40,
+      "title": "模组工场",
+      "chapter": 4,
+      "size": 6,
+      "budget": 24,
+      "incidentLimit": 2,
+      "referenceWork": 22,
+      "craneMoves": 2,
+      "topologySha256": "18470371dc3d89474b1dde7b4f6ea99803a5351b49c24b9ea1b9c7909d040aac",
+      "referenceSolution": [
+        {
+          "type": "move",
+          "from": 0,
+          "to": 2
+        },
+        {
+          "type": "move",
+          "from": 1,
+          "to": 15
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 41,
+      "title": "先通后借",
+      "chapter": 5,
+      "size": 6,
+      "budget": 21,
+      "incidentLimit": 2,
+      "referenceWork": 18,
+      "craneMoves": 1,
+      "topologySha256": "c79f163685234c883ce65319343c480693411fdd8f7c85532bfe2712e092aba7",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 14,
+          "to": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 42,
+      "title": "一板两用",
+      "chapter": 5,
+      "size": 6,
+      "budget": 43,
+      "incidentLimit": 2,
+      "referenceWork": 40,
+      "craneMoves": 1,
+      "topologySha256": "1854f18ee01a13b074de67871a51505208c6e66460e4cef8bdf4b005d3ee3043",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 0
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 20,
+          "to": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 43,
+      "title": "回收接力",
+      "chapter": 5,
+      "size": 6,
+      "budget": 23,
+      "incidentLimit": 2,
+      "referenceWork": 20,
+      "craneMoves": 1,
+      "topologySha256": "91ad1333f230d998b3bbb74605aab79caae4a07c36c53905321b17308e19bc97",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 9,
+          "to": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 44,
+      "title": "施工封锁",
+      "chapter": 5,
+      "size": 6,
+      "budget": 20,
+      "incidentLimit": 2,
+      "referenceWork": 18,
+      "craneMoves": 1,
+      "topologySha256": "c327b67a286b46649ab6547d583e11692c827d768147186aafa4ae45a33ae26f",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 4
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 22,
+          "to": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            0,
+            4
+          ],
+          [
+            0,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 45,
+      "title": "单线抢通",
+      "chapter": 5,
+      "size": 6,
+      "budget": 35,
+      "incidentLimit": 2,
+      "referenceWork": 33,
+      "craneMoves": 1,
+      "topologySha256": "37292ad7dd9d01c59bd0ced804c006780619965d2fbc7e1822b70100113a1b60",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 3
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 9
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 1,
+          "to": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 46,
+      "title": "紧急换铺",
+      "chapter": 5,
+      "size": 6,
+      "budget": 20,
+      "incidentLimit": 1,
+      "referenceWork": 18,
+      "craneMoves": 2,
+      "topologySha256": "ab2d7b3ede537d7dc6daba57cda2a5c1f584c51e3a0e3560d94e9288ac19cf5e",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 23,
+          "to": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "move",
+          "from": 29,
+          "to": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 47,
+      "title": "逆向调度",
+      "chapter": 5,
+      "size": 6,
+      "budget": 21,
+      "incidentLimit": 1,
+      "referenceWork": 20,
+      "craneMoves": 2,
+      "topologySha256": "d627e5a6ffa5427413f63498d79f661d723ddee58f1dfa70978c56f9be09a66e",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 17
+        },
+        {
+          "type": "turn",
+          "index": 11
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "turn",
+          "index": 19
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 27,
+          "to": 25
+        },
+        {
+          "type": "move",
+          "from": 28,
+          "to": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            0,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 48,
+      "title": "夜间决战",
+      "chapter": 5,
+      "size": 6,
+      "budget": 37,
+      "incidentLimit": 1,
+      "referenceWork": 36,
+      "craneMoves": 2,
+      "topologySha256": "39a94ecaafd50a2e95d09c546b50e12bb8872e33c306a9a38443e657252d2b5d",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 27
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 14
+        },
+        {
+          "type": "turn",
+          "index": 15
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 16
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 35
+        },
+        {
+          "type": "turn",
+          "index": 29
+        },
+        {
+          "type": "turn",
+          "index": 23
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 20,
+          "to": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "turn",
+          "index": 22
+        },
+        {
+          "type": "move",
+          "from": 15,
+          "to": 28
+        },
+        {
+          "type": "turn",
+          "index": 28
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            2,
+            5
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 49,
+      "title": "最后工时",
+      "chapter": 5,
+      "size": 6,
+      "budget": 17,
+      "incidentLimit": 1,
+      "referenceWork": 16,
+      "craneMoves": 2,
+      "topologySha256": "129270d7b838b178778b65dcc5b77fe9ecf1bea28f4d17bbe0fe72593c0ff2ce",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 21
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 34
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 10
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 34,
+          "to": 32
+        },
+        {
+          "type": "turn",
+          "index": 32
+        },
+        {
+          "type": "move",
+          "from": 10,
+          "to": 26
+        },
+        {
+          "type": "turn",
+          "index": 26
+        },
+        {
+          "type": "turn",
+          "index": 33
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    },
+    {
+      "id": 50,
+      "title": "城市复线",
+      "chapter": 5,
+      "size": 6,
+      "budget": 15,
+      "incidentLimit": 1,
+      "referenceWork": 15,
+      "craneMoves": 2,
+      "topologySha256": "d361e5111aa07fcfbfb85ed73c30480b44cd588782e711b4d115a6da33c57c57",
+      "referenceSolution": [
+        {
+          "type": "turn",
+          "index": 31
+        },
+        {
+          "type": "turn",
+          "index": 25
+        },
+        {
+          "type": "turn",
+          "index": 24
+        },
+        {
+          "type": "turn",
+          "index": 18
+        },
+        {
+          "type": "turn",
+          "index": 12
+        },
+        {
+          "type": "turn",
+          "index": 6
+        },
+        {
+          "type": "turn",
+          "index": 8
+        },
+        {
+          "type": "turn",
+          "index": 2
+        },
+        {
+          "type": "turn",
+          "index": 1
+        },
+        {
+          "type": "turn",
+          "index": 20
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        },
+        {
+          "type": "move",
+          "from": 8,
+          "to": 13
+        },
+        {
+          "type": "turn",
+          "index": 13
+        },
+        {
+          "type": "move",
+          "from": 2,
+          "to": 14
+        },
+        {
+          "type": "turn",
+          "index": 7
+        },
+        {
+          "type": "dispatch"
+        }
+      ],
+      "routeCells": [
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ]
+      ],
+      "noToolsOrRevival": true
+    }
+  ]
+}

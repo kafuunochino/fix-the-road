@@ -19,10 +19,11 @@ export function createPhoneHarness({width=320,height=568,safeInsets={top:24,righ
  const snapshot=()=>window.roadDemo.getSnapshot();
  function tick(dt=50){now+=dt;const callbacks=[...frames.values()];frames.clear();if(callbacks.length)texts.length=0;callbacks.forEach(fn=>fn(now));}
  function point(type,x,y,id=1){canvas.emit('pointer'+type,{clientX:x,clientY:y,pointerId:id});}
- function tap(id){const s=snapshot(),b=s.hitTargets.find(h=>h.id===id);assert.ok(b,`Missing ${id} in ${s.modal}`);const x=s.transform.x+(b.x+b.w/2)*s.transform.scale,y=s.transform.y+(b.y+b.h/2)*s.transform.scale;point('down',x,y);point('up',x,y);tick();}
+ function tap(id){if(/^level-/.test(id)&&snapshot().modal==='levels'&&!snapshot().hitTargets.some(h=>h.id===id))tap('chapter-'+Math.floor((Number(id.slice(6))-1)/10));const s=snapshot(),b=s.hitTargets.find(h=>h.id===id);assert.ok(b,`Missing ${id} in ${s.modal}`);const x=s.transform.x+(b.x+b.w/2)*s.transform.scale,y=s.transform.y+(b.y+b.h/2)*s.transform.scale;point('down',x,y);point('up',x,y);tick();}
  function finish(){for(let i=0;i<300&&snapshot().busy;i++)tick();assert.equal(snapshot().busy,false);}
  function assertTargets(){const s=snapshot();for(const b of s.hitTargets){assert.ok(b.w*s.transform.scale>=44-1e-9&&b.h*s.transform.scale>=44-1e-9,`${b.id} <44 CSS px: ${b.w}x${b.h}`);const x=s.transform.x+b.x,y=s.transform.y+b.y;assert.ok(x>=safeInsets.left-1e-9&&y>=safeInsets.top-1e-9&&x+b.w<=width-safeInsets.right+1e-9&&y+b.h<=height-safeInsets.bottom+1e-9,`${b.id} violates safe viewport`);}}
  function resize(w,h,safe=safeInsets){width=w;height=h;safeInsets=safe;window.emit('resize');tick();}
  function destroy(){window.emit('pagehide',{persisted:false});assert.equal(frames.size,0);assert.equal(canvas.count(),0);assert.equal(document.count(),0);}
- tick();return {canvas,window,document,frames,store,texts,snapshot,tick,tap,point,finish,assertTargets,resize,destroy,html};
+ function action(a){if(a.type==='turn')tap(`tile-${a.index}`);else if(a.type==='move'){tap('crane');tap(`tile-${a.from}`);tap(`tile-${a.to}`);tap('crane');}else{tap('dispatch');finish();}}
+ tick();return {action,canvas,window,document,frames,store,texts,snapshot,tick,tap,point,finish,assertTargets,resize,destroy,html};
 }

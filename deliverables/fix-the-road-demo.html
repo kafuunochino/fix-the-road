@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102c40"><title>修好这条路 · 手机施工版 0.2.0</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102c40}canvas{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>(function(){
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102c40"><title>修好这条路 · 城市复线 · 50关 0.3.0</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102c40}canvas{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>(function(){
 'use strict';
 // Source: src/rules.js
 /** Pure road rules. Directions clockwise: north, east, south, west. */
@@ -56,36 +56,60 @@ function traceRoute(level, board, vehicle) {
 }
 
 function createState(level) {
-  return { levelId: level.id, board: copyBoard(level.board), nextVehicle: 0, moves: 0, history: [] };
+  return { levelId: level.id, board: copyBoard(level.board), nextVehicle: 0, moves: 0, history: [], workSpent: 0, budget: level.budget ?? null, incidents: 0, incidentLimit: level.incidentLimit ?? null, failed: null, revived: false, toolUsed: false };
 }
 function remember(state) {
   return { board: copyBoard(state.board), nextVehicle: state.nextVehicle, moves: state.moves };
 }
 function turnTile(state, index) {
+  if (state.failed) return state;
   if (!Number.isInteger(index) || !isEditable(state.board[index])) return state;
+  if (state.budget !== null && state.workSpent >= state.budget) return { ...state, failed: 'budget' };
   const board = copyBoard(state.board), tile = board[index];
   if (tile.type === 'switch') tile.switchState = tile.switchState === 0 ? 1 : 0;
   else tile.rotation = mod4(tile.rotation + 1);
-  return { ...state, board, moves: state.moves + 1, history: [...state.history, remember(state)] };
+  return { ...state, board, moves: state.moves + 1, workSpent: state.budget===null?0:state.workSpent + 1, history: [...state.history, remember(state)] };
 }
 function dispatch(state, level) {
   if (state.levelId !== level.id) return { state, result: { ok: false, reason: 'wrong_level', path: [] } };
+  if (state.failed) return { state, result: { ok: false, reason: state.failed, path: [] } };
   const result = traceRoute(level, state.board, level.vehicles[state.nextVehicle]);
-  if (!result.ok) return { state, result };
+  if (!result.ok) {
+    if (state.incidentLimit === null) return { state, result };
+    const incidents = state.incidents + 1;
+    return { state: { ...state, incidents, failed: incidents >= state.incidentLimit ? 'incidents' : null }, result };
+  }
   return { result, state: { ...state, nextVehicle: state.nextVehicle + 1, history: [...state.history, remember(state)] } };
 }
 function undo(state) {
-  if (!state.history.length) return state;
+  if (state.failed || !state.history.length) return state;
   const previous = state.history.at(-1);
   return { ...state, ...previous, board: copyBoard(previous.board), history: state.history.slice(0, -1) };
 }
 const isComplete = (state, level) => state.nextVehicle >= level.vehicles.length;
 function starsFor(moves, par) { return moves <= par ? 3 : moves <= par + 6 ? 2 : 1; }
 
-/** Normalize saved data; never trust localStorage shape or numeric ranges. */
+/** A marked modular road panel may be craned into an empty foundation. */
+function movePanel(state, from, to) {
+  if (state.failed || from === to || !Number.isInteger(from) || !Number.isInteger(to)) return state;
+  const tile=state.board[from];
+  if (!tile?.movable || !['straight','bend'].includes(tile.type) || state.board[to]?.type !== 'socket') return state;
+  if (state.budget !== null && state.workSpent >= state.budget) return { ...state, failed: 'budget' };
+  const board=copyBoard(state.board); board[to]={...tile}; board[from]={type:'socket'};
+  return {...state,board,moves:state.moves+1,workSpent:state.workSpent+1,history:[...state.history,remember(state)]};
+}
+function reviveState(state) {
+  if (!state.failed || state.revived) return state;
+  return {...state,failed:null,revived:true,budget:state.budget===null?null:Math.max(state.budget,state.workSpent)+10,incidents:0,history:[]};
+}
+function useWorkTool(state) {
+  if (state.failed || state.toolUsed || state.budget===null) return state;
+  return {...state,toolUsed:true,budget:state.budget+6};
+}
+/** Version 1 saves migrate without losing clears. No server / money economy. */
 function normalizeProgress(value, levelIds) {
-  const safe = { version: 1, completed: [], bestMoves: {}, sound: false, lastLevel: 1 };
-  if (!value || typeof value !== 'object' || value.version !== 1) return safe;
+  const safe = { version: 2, completed: [], bestMoves: {}, sound: false, lastLevel: 1, coins: 0 };
+  if (!value || typeof value !== 'object' || ![1,2].includes(value.version)) return safe;
   safe.completed = [...new Set(Array.isArray(value.completed) ? value.completed.filter(id => levelIds.includes(id)) : [])];
   for (const id of safe.completed) {
     const n = value.bestMoves?.[id];
@@ -93,7 +117,16 @@ function normalizeProgress(value, levelIds) {
   }
   safe.sound = value.sound === true;
   if (levelIds.includes(value.lastLevel)) safe.lastLevel = value.lastLevel;
+  safe.coins=value.version===1?safe.completed.length*20:(Number.isInteger(value.coins)&&value.coins>=0?Math.min(value.coins,12000):0);
   return safe;
+}
+function awardVictory(progress, level, moves) {
+  const first=!progress.completed.includes(level.id);
+  return {...progress,completed:first?[...progress.completed,level.id]:[...progress.completed],bestMoves:{...progress.bestMoves,[level.id]:Math.min(progress.bestMoves[level.id]??Infinity,moves)},coins:Math.min(12000,progress.coins+(first?20:0))};
+}
+function spendCoins(progress, amount) {
+  if (!Number.isInteger(amount)||amount<=0||progress.coins<amount) return null;
+  return {...progress,coins:progress.coins-amount};
 }
 
 // Source: src/levels.js
@@ -164,7 +197,59 @@ function makeLevel(spec, index) {
   const vehicles = spec.routes.map((route, i) => ({ id: `${id}-${i}`, start: [...route[0]], destination: i === 0 ? 'bakery' : 'garden', name: i === 0 ? '早餐小车' : '送花小车', cargo: i === 0 ? '新鲜面包' : '一车鲜花', color: i === 0 ? '#f5ae35' : '#9b7be8', destinationName: names[i === 0 ? 'bakery' : 'garden'] }));
   return { id, title: spec.title, district: spec.district, note: spec.note, width, height: width, board, vehicles, solution, par: solution.filter(a => a.type === 'turn').length, routes: spec.routes, junctionIndex };
 }
-const LEVELS = templates.map(makeLevel);
+
+
+// Forty distinct, fixed construction drawings. Routes were generated offline,
+// then frozen and reference-replayed. No random difficulty or ad-dependent layouts.
+const campaignDrawings=[{"n":5,"routes":[[[4,0],[3,0],[2,0],[1,0],[1,1],[2,1],[3,1],[4,1]]]},{"n":5,"routes":[[[4,0],[4,1],[3,1],[3,0],[2,0],[1,0],[1,1],[1,2],[0,2],[0,3],[0,4]]]},{"n":5,"routes":[[[4,0],[4,1],[4,2],[4,3],[4,4],[3,4],[2,4],[1,4],[0,4],[0,3]]]},{"n":5,"routes":[[[4,0],[3,0],[3,1],[4,1],[4,2],[3,2],[2,2],[2,1],[2,0],[1,0],[0,0],[0,1],[0,2]]]},{"n":5,"routes":[[[4,0],[3,0],[2,0],[1,0],[1,1],[2,1],[2,2],[3,2],[3,3],[3,4],[4,4],[4,3],[4,2]]]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[3,1],[3,2],[2,2],[2,3],[2,4],[3,4],[3,5],[4,5],[5,5],[5,4],[4,4],[4,3]]]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[3,1],[2,1],[1,1],[1,0],[0,0],[0,1],[0,2],[1,2],[1,3],[2,3],[3,3],[4,3]]]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[4,2],[5,2],[5,3],[4,3],[4,4],[5,4],[5,5],[4,5],[3,5],[2,5],[2,4],[3,4],[3,3],[3,2]]]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[4,2],[3,2],[3,1],[2,1],[2,0],[1,0],[1,1],[0,1],[0,2],[0,3],[0,4],[0,5],[1,5],[2,5]]]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[4,4],[3,4],[2,4],[2,5],[1,5],[1,4],[0,4],[0,3],[1,3],[2,3]]]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[4,0],[3,0],[2,0],[1,0],[0,0],[0,1],[0,2],[0,3],[0,4],[1,4]],[[5,0],[5,1],[4,1],[4,0],[3,0],[3,1],[3,2],[2,2],[2,3],[3,3],[3,4],[3,5],[2,5]]],"junction":[3,0]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[3,1],[3,2],[2,2],[1,2],[1,1],[0,1],[0,2],[0,3],[1,3]],[[5,0],[5,1],[4,1],[3,1],[3,2],[2,2],[1,2],[1,1],[2,1],[2,0],[1,0],[0,0]]],"junction":[1,1]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[2,0],[2,1],[1,1],[1,0],[0,0],[0,1],[0,2],[1,2],[1,3],[2,3],[3,3]],[[5,0],[4,0],[3,0],[2,0],[2,1],[2,2],[3,2],[3,1],[4,1]]],"junction":[2,1]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[3,1],[3,2],[3,3],[4,3],[5,3],[5,4],[4,4],[4,5],[3,5]],[[5,0],[4,0],[4,1],[3,1],[2,1],[2,0],[1,0],[1,1]]],"junction":[3,1]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[4,2],[3,2],[3,3],[4,3],[5,3],[5,4],[4,4],[4,5],[3,5],[2,5],[2,4]],[[5,0],[5,1],[5,2],[4,2],[3,2],[3,3],[2,3],[2,2],[1,2],[1,3],[1,4],[0,4]]],"junction":[3,3]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[4,4],[4,3],[3,3],[2,3],[2,2]],[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[3,5],[2,5],[2,4],[1,4]]],"junction":[4,5]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[2,0],[1,0],[1,1],[1,2],[0,2],[0,3],[0,4],[1,4],[2,4],[2,5],[1,5]],[[5,0],[4,0],[3,0],[2,0],[2,1],[3,1],[3,2],[3,3]]],"junction":[2,0]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[3,1],[4,1],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[3,5],[3,4]],[[5,0],[4,0],[3,0],[3,1],[4,1],[5,1],[5,2],[4,2],[4,3],[3,3],[2,3]]],"junction":[5,2]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[4,2],[3,2],[3,1],[2,1],[2,0],[1,0],[1,1],[1,2],[2,2],[2,3],[1,3]],[[5,0],[5,1],[5,2],[4,2],[3,2],[3,3],[4,3],[5,3],[5,4]]],"junction":[3,2]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[5,3],[5,4],[4,4],[3,4],[3,3],[2,3],[1,3],[0,3],[0,2],[0,1]],[[5,0],[5,1],[5,2],[5,3],[4,3],[4,2],[3,2],[3,1],[3,0],[2,0]]],"junction":[5,3]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[5,1],[5,2],[5,3],[5,4],[4,4],[3,4],[2,4],[1,4],[1,3]],[[5,0],[4,0],[4,1],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[3,5],[2,5],[1,5]]],"junction":[5,4]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[3,1],[2,1],[2,0],[1,0],[1,1],[0,1],[0,2],[1,2],[1,3],[2,3]],[[5,0],[4,0],[3,0],[3,1],[2,1],[2,2],[3,2],[4,2],[4,1]]],"junction":[2,1]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[3,1],[2,1],[1,1],[0,1],[0,2],[0,3],[1,3],[2,3],[2,4]],[[5,0],[5,1],[4,1],[3,1],[3,0],[2,0],[1,0],[0,0]]],"junction":[3,1]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[4,0],[3,0],[2,0],[1,0],[1,1],[0,1],[0,2],[0,3],[1,3],[2,3]],[[5,0],[5,1],[4,1],[4,0],[3,0],[2,0],[2,1],[2,2],[3,2],[3,1]]],"junction":[2,0]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[3,1],[2,1],[2,0],[1,0],[1,1],[0,1],[0,2],[0,3],[1,3]],[[5,0],[4,0],[4,1],[3,1],[2,1],[2,0],[1,0],[1,1],[1,2],[2,2],[3,2],[3,3],[2,3]]],"junction":[1,1]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[3,5],[3,4],[2,4],[2,3],[1,3]],[[5,0],[4,0],[4,1],[5,1],[5,2],[4,2],[3,2],[3,1],[3,0]]],"junction":[5,2]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[4,4],[3,4],[3,5],[2,5],[2,4]],[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[4,5],[4,4],[4,3],[3,3],[2,3],[1,3],[0,3]]],"junction":[4,4]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[4,0],[3,0],[2,0],[1,0],[0,0],[0,1],[1,1],[2,1],[2,2],[1,2],[0,2]],[[5,0],[5,1],[4,1],[4,0],[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,4],[1,4]]],"junction":[3,0]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[3,1],[3,2],[4,2],[4,3],[3,3],[2,3],[2,2],[1,2],[1,3],[1,4]],[[5,0],[4,0],[3,0],[3,1],[3,2],[4,2],[4,3],[3,3],[3,4],[4,4],[5,4],[5,3]]],"junction":[3,3]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[5,1],[5,2],[4,2],[3,2],[2,2],[1,2],[0,2],[0,3],[1,3],[2,3],[2,4]],[[5,0],[4,0],[4,1],[5,1],[5,2],[4,2],[3,2],[2,2],[2,1],[2,0],[3,0],[3,1]]],"junction":[2,2]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[4,2],[3,2],[2,2],[2,3],[3,3],[4,3],[5,3],[5,4],[4,4],[4,5]],[[5,0],[5,1],[5,2],[4,2],[4,1],[3,1],[3,0],[4,0]]],"junction":[4,2]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[4,2],[3,2],[3,1],[3,0],[2,0],[2,1],[1,1],[1,0],[0,0],[0,1],[0,2]],[[5,0],[5,1],[5,2],[4,2],[4,3],[3,3],[3,4],[4,4],[4,5]]],"junction":[4,2]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[3,1],[3,2],[3,3],[2,3],[1,3],[0,3],[0,4],[1,4],[2,4],[2,5]],[[5,0],[4,0],[3,0],[3,1],[3,2],[3,3],[2,3],[2,2],[2,1],[1,1],[0,1],[0,2],[1,2]]],"junction":[2,3]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[3,1],[4,1],[4,2],[3,2],[3,3],[3,4],[4,4],[4,5],[5,5]],[[5,0],[4,0],[3,0],[3,1],[4,1],[4,2],[3,2],[3,3],[2,3],[2,4],[1,4],[0,4],[0,3]]],"junction":[3,3]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[3,1],[3,2],[2,2],[1,2],[1,1],[0,1],[0,2],[0,3],[1,3],[1,4]],[[5,0],[5,1],[4,1],[3,1],[3,2],[2,2],[1,2],[1,1],[2,1],[2,0],[1,0],[0,0]]],"junction":[1,1]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[5,3],[4,3],[4,4],[3,4],[2,4],[2,5],[3,5],[4,5],[5,5]],[[5,0],[5,1],[5,2],[5,3],[4,3],[4,4],[3,4],[3,3],[3,2],[3,1],[4,1]]],"junction":[3,4]},{"n":6,"routes":[[[5,0],[5,1],[5,2],[4,2],[4,3],[4,4],[5,4],[5,5],[4,5],[3,5],[2,5],[1,5],[0,5]],[[5,0],[5,1],[5,2],[4,2],[4,1],[4,0],[3,0],[2,0],[2,1],[3,1],[3,2]]],"junction":[4,2]},{"n":6,"routes":[[[5,0],[4,0],[4,1],[4,2],[4,3],[3,3],[3,2],[2,2],[2,3],[2,4],[1,4],[1,3]],[[5,0],[4,0],[4,1],[4,2],[4,3],[3,3],[3,4],[4,4],[5,4],[5,5],[4,5],[3,5],[2,5]]],"junction":[3,3]},{"n":6,"routes":[[[5,0],[4,0],[3,0],[3,1],[3,2],[3,3],[4,3],[5,3],[5,4],[4,4],[3,4],[2,4],[1,4],[1,5]],[[5,0],[4,0],[3,0],[3,1],[3,2],[3,3],[4,3],[5,3],[5,2],[4,2],[4,1],[5,1]]],"junction":[5,3]},{"n":6,"routes":[[[5,0],[5,1],[4,1],[4,0],[3,0],[2,0],[1,0],[1,1],[1,2],[0,2],[0,1],[0,0]],[[5,0],[5,1],[4,1],[4,0],[3,0],[2,0],[1,0],[1,1],[2,1],[2,2],[3,2],[3,3]]],"junction":[1,1]}];
+const campaignNames=["夜班开工", "沿河抢修", "高架引道", "环城匝道", "港区绕行", "错峰运输", "雨后便道", "隧道出口", "老街接驳", "东岸交付", "双线调度", "共用咽喉", "岔口窗口", "物流节点", "工厂换班", "仓区绕行", "东西接力", "滨河分流", "立交之下", "环港调度", "吊装初试", "拼装便道", "空槽接续", "路板回收", "桥面拼接", "借道施工", "临时栈桥", "钢板换位", "双段接驳", "模组工场", "先通后借", "一板两用", "回收接力", "施工封锁", "单线抢通", "紧急换铺", "逆向调度", "夜间决战", "最后工时", "城市复线"];
+
+function makeCampaign(drawing, offset) {
+  const id=offset+11, chapter=Math.floor((id-1)/10)+1;
+  const note=chapter===2?'旋转消耗工时，撤销不退工时；预览免费，发车前检查断点。':chapter===3?'先修共用道路，再切换岔口依次运输。错误发车会损失故障容错。':chapter===4?'点吊装，再点带螺栓的路板与空槽。搬运消耗1工时，路板可旋转。':'先交付面包，再把旧支路的螺栓路板吊到鲜花支路；有限工时要规划。';
+  const level=makeLevel({size:drawing.n,routes:drawing.routes,junction:drawing.junction,title:campaignNames[offset],district:['','入门街区','限时施工','双线物流','模组工场','旧路新用'][chapter],note},id-1);
+  const initialTurns=level.solution.slice(0,level.solution.findIndex(a=>a.type==='dispatch'));
+  const solvedBoard=level.board.map(t=>({...t,exits:t.exits?[...t.exits]:undefined}));
+  for(const a of initialTurns){const t=solvedBoard[a.index];if(t.type==='switch')t.switchState=1-t.switchState;else t.rotation=(t.rotation+1)%4;}
+  let solution=[...initialTurns,{type:'dispatch'}];
+  if(level.vehicles.length===2)solution.push({type:'turn',index:level.junctionIndex},{type:'dispatch'});
+  level.transfers=[];
+  if(chapter===4){
+    const count=id<35?1:2;
+    const candidates=level.routes[0].slice(1,-1).map(c=>indexOf(...c,level.width)).filter(i=>['straight','bend'].includes(level.board[i].type));
+    const stock=level.board.map((t,i)=>t.type==='park'?i:-1).filter(i=>i>=0);
+    const moves=[];
+    for(let k=0;k<count;k++){
+      const to=candidates[(k*3+offset)%candidates.length],from=stock[k];
+      level.board[from]={...level.board[to],movable:true};level.board[to]={type:'socket'};
+      level.transfers.push({from,to,phase:0});moves.push({type:'move',from,to});
+    }
+    solution=[...moves,...solution];
+  }
+  if(chapter===5){
+    const first=new Set(level.routes[0].map(c=>indexOf(...c,level.width))),second=new Set(level.routes[1].map(c=>indexOf(...c,level.width)));
+    const donors=[...first].filter(i=>!second.has(i)&&['straight','bend'].includes(level.board[i].type));
+    const gaps=[...second].filter(i=>!first.has(i)&&['straight','bend'].includes(level.board[i].type));
+    const needed=id<46?1:2,used=new Set(),moves=[];
+    for(const to of gaps){
+      const from=donors.find(i=>!used.has(i)&&level.board[i].type===level.board[to].type);if(from===undefined)continue;
+      used.add(from);level.board[from].movable=true;level.board[to]={type:'socket'};level.transfers.push({from,to,phase:1});
+      moves.push({type:'move',from,to});
+      const actual={...solvedBoard[from]},target=ports(solvedBoard[to]);
+      for(let n=0;n<4&&!target.every(p=>ports(actual).includes(p));n++){moves.push({type:'turn',index:to});actual.rotation=(actual.rotation+1)%4;}
+      if(level.transfers.length===needed)break;
+    }
+    if(!level.transfers.length)throw Error(`No reusable road panel in ${id}`);
+    const holes=new Set(level.transfers.map(t=>t.to));
+    solution=[...initialTurns.filter(a=>!holes.has(a.index)),{type:'dispatch'},...moves,{type:'turn',index:level.junctionIndex},{type:'dispatch'}];
+  }
+  level.solution=solution;level.par=solution.filter(a=>a.type!=='dispatch').length;
+  const slack=chapter===2?Math.max(4,8-(id-11)):chapter===3?Math.max(3,6-(id-21)):chapter===4?Math.max(2,5-(id-31)):Math.max(0,3-Math.floor((id-41)/3));
+  level.budget=level.par+slack;level.incidentLimit=id>=46?1:id>=31?2:3;level.chapter=chapter;level.reward=20;
+  return level;
+}
+const LEVELS = [...templates.map(makeLevel),...campaignDrawings.map(makeCampaign)];
+const CHAPTERS = ['入门街区','限量施工','双线调度','模组吊装','旧路新用'];
 
 // Source: src/canvas-game.js
 
@@ -174,7 +259,7 @@ function startGame(platform) {
   const ctx = platform.canvas.getContext('2d');
   let W=400,H=800,layout={};
   const KEY='fix-the-road-v1';
-  const colors={paper:'#102c40',ink:'#edf4ed',muted:'#9db7c4',purple:'#d3a1ff',green:'#67e5cb',yellow:'#ffca51'};
+  const colors={paper:'#202932',ink:'#edf4ed',muted:'#9db7c4',purple:'#d3a1ff',green:'#67e5cb',yellow:'#ffca51'};
   const fontStack='"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif';
   let saved, storageOK=true;
   try { saved=JSON.parse(platform.storage.getItem(KEY)); } catch { saved=null; storageOK=false; }
@@ -182,6 +267,22 @@ function startGame(platform) {
   let level=LEVELS.find(l=>l.id===progress.lastLevel)||LEVELS[0], state=createState(level);
   let preview=false, modal=null, message='', hint=-1, hits=[], animation=null, frameId=null, previousTime=null, paused=false, destroyed=false;
   let transform={scale:1,x:0,y:0}, gesture=null;
+  let crane=false,selectedPanel=-1,mapPage=Math.floor((level.id-1)/10),runId=1,adPending=false,lastRewardId=null,winAward=0;
+  const rewardService=platform.rewards;
+  function failIfNeeded(){if(state.failed){modal='failed';crane=false;selectedPanel=-1;}schedule();}
+  function cancelReward(){runId++;adPending=false;rewardService?.cancel?.();}
+  async function requestRevive(){
+    if(!state.failed||state.revived||adPending)return;
+    if(!rewardService?.getState?.().available){message='广告功能仅预留，当前不可用。可以免费重开。';schedule();return;}
+    const expectedRun=runId;adPending=true;gesture=null;modal=rewardService.getState().mode==='mock'?'mock-ad':'ad-wait';schedule();
+    let result;try{result=await rewardService.request({placement:'revive',context:{runId:expectedRun,levelId:level.id}});}catch{result={status:'error'};}
+    if(destroyed||expectedRun!==runId)return;adPending=false;
+    if(result.status==='completed'&&result.requestId&&result.requestId!==lastRewardId&&state.failed&&!state.revived){lastRewardId=result.requestId;state=reviveState(state);modal=null;message='施工支援到位：+10工时，故障容错恢复。本局只可复活一次。';}
+    else{modal='failed';message=result.status==='cancelled'?'未完成观看，没有发放奖励。':result.status==='unavailable'?'暂无可用广告，没有发放奖励。':'广告异常，没有发放奖励。';}
+    previousTime=null;schedule();
+  }
+  function coinRevive(){if(!state.failed||state.revived)return;const paid=spendCoins(progress,20);if(!paid){message='金币不足，仍可免费重开。';schedule();return;}progress=paid;state=reviveState(state);save();modal=null;message='使用20金币复工：+10工时，恢复容错；本局限一次。';schedule();}
+  function buyWork(){if(state.failed||state.toolUsed||state.budget===null||isComplete(state,level)||animation||adPending)return;const paid=spendCoins(progress,12);if(!paid){message='金币不足12；通关首次获得20金币。';schedule();return;}progress=paid;state=useWorkTool(state);save();message='已使用加班券：+6工时，本局限购一次。';schedule();}
   let sidebarState=platform.sidebar?.getState?.()||null;
   platform.audio.setMuted(!progress.sound);
   const currentVehicle=()=>level.vehicles[state.nextVehicle];
@@ -212,7 +313,7 @@ function startGame(platform) {
       if(!destroyed&&!opened)notify('暂时无法打开侧边栏，请稍后再试。');
     }catch{if(!destroyed)notify('暂时无法打开侧边栏，请稍后再试。');}
   }
-  function load(id){level=LEVELS.find(l=>l.id===id)||LEVELS[0];state=createState(level);animation=null;previousTime=null;preview=false;modal=null;message='';hint=-1;progress.lastLevel=level.id;save();schedule();}
+  function load(id){cancelReward();crane=false;selectedPanel=-1;winAward=0;level=LEVELS.find(l=>l.id===id)||LEVELS[0];state=createState(level);animation=null;previousTime=null;preview=false;modal=null;message='';hint=-1;mapPage=Math.floor((level.id-1)/10);progress.lastLevel=level.id;save();schedule();}
   function routeMessage(result){
     if(result.ok)return '路线接通了！这辆车可以放心出发。';
     if(result.reason==='wrong_destination')return '送错目的地啦！点橙色岔口换个方向。';
@@ -222,18 +323,18 @@ function startGame(platform) {
     return '这段路还没接上。转动道路，让两端对齐。';
   }
   function send(){
-    if(animation)return;
+    if(animation||state.failed||adPending)return;
     if(isComplete(state,level)){modal='win';schedule();return;}
     const outcome=dispatch(state,level);
-    animation={outcome,vehicle:currentVehicle(),elapsed:0,duration:Math.max(400,(outcome.result.path.length-1)*190+300)};
+    animation={outcome,vehicle:currentVehicle(),elapsed:0,duration:Math.max(400,(outcome.result.path.length-1)*190+(outcome.result.ok?420:1150))};
     previousTime=null;preview=true;hint=-1;message='小车出发了！';sound('send');schedule();
   }
   function finishDelivery(){
     const {outcome}=animation;animation=null;previousTime=null;
     if(outcome.result.ok){state=outcome.state;preview=false;sound('win');
-      if(isComplete(state,level)){if(!progress.completed.includes(level.id))progress.completed.push(level.id);progress.bestMoves[level.id]=Math.min(progress.bestMoves[level.id]??Infinity,state.moves);save();modal='win';message='所有心意都送到了！';}
-      else message='面包送到了！切换橙色岔口，再把鲜花送去花园。';
-    }else{message=routeMessage(outcome.result);sound('error');}
+      if(isComplete(state,level)){winAward=progress.completed.includes(level.id)?0:20;progress=awardVictory(progress,level,state.moves);save();modal='win';message='运输已验收，道路恢复通行。';}
+      else message=level.chapter===5?'首车交付。吊起旧支路的螺栓路板，补上鲜花支路空槽。':'首车交付。保留共用道路，切换橙色岔口再发鲜花车。';
+    }else{state=outcome.state;message=routeMessage(outcome.result);sound('error');failIfNeeded();}
   }
   function showHint(){
     const route=level.routes[state.nextVehicle];hint=-1;
@@ -253,111 +354,181 @@ function startGame(platform) {
       ctx.strokeStyle=color;ctx.lineWidth=width;ctx.lineCap='butt';ctx.setLineDash?.(dash?[size*.08,size*.07]:[]);ctx.stroke();ctx.setLineDash?.([]);
     }
     if(tile.type==='switch')connection(tile.stem,tile.exits[1-tile.switchState],'#384c54',size*.38);
-    const p=ports(tile);connection(...p,tile.type==='switch'?'#f4a949':'#8099a9',size*.48);connection(...p,'#233641',size*.34);connection(...p,active?'#65f1df':'#e5e8c9',size*.035,true);
-    if(tile.type==='switch'){circle(...center,size*.11,'#ffbf47');text('↔',center[0],center[1],size*.2,'#132a37','center','700');}
+    ctx.fillStyle='#00000026';for(let k=0;k<18;k++){const xx=((k*17+tile.rotation*13)%97)/97,yy=((k*31+11)%89)/89;ctx.fillRect(x+xx*size,y+yy*size,1.2,1.2);}
+    const p=ports(tile);connection(...p,tile.type==='switch'?'#f4a949':'#8099a9',size*.48);connection(...p,'#242b30',size*.34);connection(...p,active?'#65f1df':'#e5e8c9',size*.035,true);
+    if(tile.type==='switch'){circle(...center,size*.11,'#ffbf47');path([[center[0]-size*.06,center[1]],[center[0]+size*.06,center[1]]],'#26323a',2);}
+    if(tile.movable){for(const [u,v] of [[.12,.12],[.88,.12],[.12,.88],[.88,.88]]){circle(x+size*u,y+size*v,size*.035,'#c8d0cf');circle(x+size*u,y+size*v,size*.013,'#26323a');}text('吊',x+size*.81,y+size*.2,9,'#ffce6c','center','700');}
     if(active){circle(x+size*.82,y+size*.18,2.5,colors.green);}
   }
   function drawBuilding(tile,x,y,s){
     const e=[[.5,0],[1,.5],[.5,1],[0,.5]][tile.direction];path([[x+s*.5,y+s*.5],[x+s*e[0],y+s*e[1]]],'#8099a9',s*.37);path([[x+s*.5,y+s*.5],[x+s*e[0],y+s*e[1]]],'#233641',s*.25);
     const garden=tile.destination==='garden',garage=tile.type==='source',color=garage?'#6dc6cc':garden?'#d2a0ff':'#ffcf59';
-    round(x+s*.15,y+s*.2,s*.7,s*.53,2,'#102b3e',color);round(x+s*.22,y+s*.28,s*.56,s*.17,1,color);
+    round(x+s*.17,y+s*.23,s*.72,s*.55,1,'#152129');round(x+s*.12,y+s*.19,s*.72,s*.53,1,'#59656a',color);ctx.fillStyle='#889294';ctx.beginPath();ctx.moveTo(x+s*.12,y+s*.19);ctx.lineTo(x+s*.23,y+s*.1);ctx.lineTo(x+s*.93,y+s*.1);ctx.lineTo(x+s*.84,y+s*.19);ctx.closePath();ctx.fill();round(x+s*.2,y+s*.27,s*.56,s*.16,1,'#24343e');path([[x+s*.23,y+s*.3],[x+s*.73,y+s*.3]],color,2);
     if(garage){for(let i=0;i<3;i++)path([[x+s*.3,y+s*(.5+i*.06)],[x+s*.7,y+s*(.5+i*.06)]],color,1.4);}
     else if(garden){for(let i=0;i<3;i++){const xx=x+s*(.31+i*.19);path([[xx,y+s*.64],[xx,y+s*.49]],'#88d0a3',1.5);circle(xx,y+s*.5,s*.06,i===1?'#ffd171':color);}}
     else{round(x+s*.28,y+s*.5,s*.44,s*.13,s*.05,'#e5a54b');for(let i=0;i<3;i++)path([[x+s*(.36+i*.13),y+s*.52],[x+s*(.32+i*.13),y+s*.59]],'#ffe5a1',1.3);}
-    text(garage?'车库':garden?'花园':'面包店',x+s*.5,y+s*.86,Math.max(9,s*.12),color,'center','700');
+    text(garage?'调度站':garden?'花园':'面包店',x+s*.5,y+s*.86,Math.max(9,s*.12),color,'center','700');
   }
   function drawPark(decor,x,y,s){
-    // Unbuildable lots and construction cones, rather than another pastel garden UI.
-    ctx.strokeStyle='#2e4b5b';ctx.lineWidth=1;for(let k=-1;k<4;k++){ctx.beginPath();ctx.moveTo(x+k*s*.35,y+s);ctx.lineTo(x+(k+1)*s*.35,y);ctx.stroke();}
-    const cx=x+s*.5,cy=y+s*.53;ctx.beginPath();ctx.moveTo(cx,cy-s*.23);ctx.lineTo(cx+s*.16,cy+s*.12);ctx.lineTo(cx-s*.16,cy+s*.12);ctx.closePath();ctx.fillStyle=decor%2?'#d98343':'#d6ab55';ctx.fill();
-    path([[cx-s*.08,cy],[cx+s*.08,cy]],'#ffe3ae',s*.055);round(cx-s*.23,cy+s*.1,s*.46,s*.07,1,'#133044');
+    ctx.fillStyle='#293331';ctx.fillRect(x,y,s,s);
+    if(decor%3===0){
+      round(x+s*.1,y+s*.24,s*.8,s*.62,1,'#141e22');round(x+s*.12,y+s*.15,s*.72,s*.62,1,'#626a67');
+      ctx.fillStyle='#8d9490';ctx.beginPath();ctx.moveTo(x+s*.12,y+s*.15);ctx.lineTo(x+s*.22,y+s*.07);ctx.lineTo(x+s*.91,y+s*.07);ctx.lineTo(x+s*.84,y+s*.15);ctx.closePath();ctx.fill();
+      for(let r=0;r<3;r++)for(let c=0;c<3;c++){ctx.fillStyle=(r+c+decor)%3?'#26343c':'#e8ba67';ctx.fillRect(x+s*(.23+c*.18),y+s*(.28+r*.15),s*.09,s*.06);}
+    }else if(decor%3===1){
+      for(let k=0;k<3;k++){round(x+s*.14,y+s*(.2+k*.2),s*.72,s*.13,1,'#8b8980');path([[x+s*.28,y+s*(.2+k*.2)],[x+s*.28,y+s*(.33+k*.2)]],'#515653',1.4);}
+      circle(x+s*.78,y+s*.78,s*.12,'#1b262b');circle(x+s*.78,y+s*.78,s*.065,'#707a7a');
+    }else{
+      const cx=x+s*.5,cy=y+s*.53;ctx.beginPath();ctx.moveTo(cx,cy-s*.27);ctx.lineTo(cx+s*.17,cy+s*.13);ctx.lineTo(cx-s*.17,cy+s*.13);ctx.closePath();ctx.fillStyle='#df8b3d';ctx.fill();path([[cx-s*.09,cy],[cx+s*.09,cy]],'#eee6d1',s*.06);round(cx-s*.24,cy+s*.12,s*.48,s*.08,1,'#182229');
+      for(let k=0;k<4;k++)circle(x+s*(.15+(k%2)*.64),y+s*(.13+Math.floor(k/2)*.67),s*.025,'#68716b');
+    }
+  }
+  function drawSocket(x,y,s){
+    round(x+3,y+3,s-6,s-6,2,'#151d22','#9d8560');ctx.setLineDash?.([4,4]);path([[x+7,y+7],[x+s-7,y+7],[x+s-7,y+s-7],[x+7,y+s-7],[x+7,y+7]],'#b19158',1,true);ctx.setLineDash?.([]);
+    text('空槽',x+s/2,y+s/2,Math.max(10,s*.17),'#c8ae7b','center','700');
+  }
+  function incidentFX(x,y,s,elapsed){
+    const t=Math.min(1,Math.max(0,elapsed/900));
+    ctx.save();ctx.globalAlpha=1-t*.55;
+    for(let k=0;k<9;k++){const a=k*2.4,r=s*(.12+t*.7)*(1+(k%3)*.15);circle(x+Math.cos(a)*r,y+Math.sin(a)*r*.6,s*(.055+t*.07),k%2?'#b6b0a2':'#6f7776');}
+    path([[x-s*.4,y+s*.24],[x-s*.8,y+s*.35]],'#0b1013',3);path([[x-s*.4,y-s*.24],[x-s*.8,y-s*.13]],'#0b1013',3);
+    ctx.restore();circle(x+s*.25,y-s*.38,s*.13,'#ef704b');text('!',x+s*.25,y-s*.38,s*.2,'#fff0d9','center','700');
   }
   function drawCar(x,y,size,color,angle=0){
     ctx.save();ctx.translate(x,y);ctx.rotate(angle);round(-size*.46,-size*.3,size*.92,size*.6,4,'#092231');round(-size*.41,-size*.25,size*.58,size*.5,3,color);round(size*.18,-size*.22,size*.24,size*.44,3,color);round(size*.2,-size*.17,size*.14,size*.34,1,'#23485a');
-    round(-size*.27,-size*.34,size*.18,size*.1,1,'#081b26');round(-size*.27,size*.24,size*.18,size*.1,1,'#081b26');round(size*.22,-size*.32,size*.12,size*.1,1,'#081b26');round(size*.22,size*.22,size*.12,size*.1,1,'#081b26');path([[-size*.3,-size*.12],[size*.07,-size*.12]],'#fff1be',1.5);ctx.restore();
+    round(-size*.27,-size*.34,size*.18,size*.1,1,'#081b26');round(-size*.27,size*.24,size*.18,size*.1,1,'#081b26');round(size*.22,-size*.32,size*.12,size*.1,1,'#081b26');round(size*.22,size*.22,size*.12,size*.1,1,'#081b26');path([[-size*.3,-size*.12],[size*.07,-size*.12]],'#fff1be',1.5);for(let i=0;i<4;i++)path([[-size*.32+i*size*.11,-size*.22],[-size*.32+i*size*.11,size*.22]],'#00000025',1);round(size*.39,-size*.18,size*.05,size*.1,1,'#fff0b0');round(size*.39,size*.08,size*.05,size*.1,1,'#fff0b0');round(-size*.44,-size*.18,size*.035,size*.1,1,'#e76c43');ctx.restore();
   }
   function stripe(x,y,w,h){
     ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.fillStyle='#ffca51';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#26343c';ctx.lineWidth=8;for(let xx=x-h;xx<x+w+h;xx+=17){ctx.beginPath();ctx.moveTo(xx,y+h);ctx.lineTo(xx+h,y);ctx.stroke();}ctx.restore();
   }
   function blueprint(){
-    ctx.fillStyle=colors.paper;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#1a3c50';ctx.lineWidth=1;
+    ctx.fillStyle=colors.paper;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#2a3640';ctx.lineWidth=1;
     for(let x=0;x<W;x+=24){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
     for(let y=0;y<H;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
   }
+  function drawSkyline(y,h){
+    // A layered working city, not a decorative web card. This fits only in spare
+    // vertical space so the minimum phone still prioritizes the actual map.
+    if(h<42)return;
+    const base=y+h;ctx.save();ctx.beginPath();ctx.rect(0,y,W,h);ctx.clip();
+    for(let i=0;i<12;i++){
+      const x=i*41-12,hh=24+((i*17+level.id*3)%39);ctx.fillStyle=i%2?'#303f45':'#34464c';ctx.fillRect(x,base-hh,34,hh);
+      ctx.fillStyle='#56656a';ctx.fillRect(x+2,base-hh,30,2);
+      for(let r=0;r<3;r++)for(let c=0;c<3;c++){ctx.fillStyle=(r+c+i)%4?'#1d2e38':'#b9985f';ctx.fillRect(x+6+c*8,base-hh+8+r*11,3,4);}
+    }
+    const cx=W*.73;path([[cx,base],[cx,base-h+7],[cx-49,base-h+7],[cx+53,base-h+7]],'#c49b5b',2);
+    path([[cx-40,base-h+7],[cx,base-h+22],[cx+46,base-h+7]],'#a1804e',1);path([[cx+34,base-h+7],[cx+34,base-8]],'#a8b8bc',1);round(cx+28,base-8,12,6,1,'#d7b66c');
+    path([[0,base-1],[W,base-1]],'#849190',1);ctx.restore();
+  }
   function drawBoard(){
     const {boardX:bx,boardY:by,boardSize:bw,boardGap:gap}=layout,tileSize=(bw-gap*(level.width-1))/level.width;
-    round(bx-4,by-4,bw+8,bw+8,2,'#071f30','#6b8996');
+    round(bx-6,by+1,bw+12,bw+12,3,'#0a141b');round(bx-4,by-4,bw+8,bw+8,2,'#19272e','#839294');for(const [u,v] of [[0,0],[1,0],[0,1],[1,1]]){circle(bx-2+u*(bw+4),by-2+v*(bw+4),2,'#a0aaa4');}
     const route=currentVehicle()?traceRoute(level,state.board,currentVehicle()):null,routeCells=new Set(preview?route?.path:[]);
     state.board.forEach((tile,i)=>{
       const x=bx+(i%level.width)*(tileSize+gap),y=by+Math.floor(i/level.width)*(tileSize+gap);
-      const fill=tile.type==='park'?'#183545':tile.type==='switch'?'#5b4830':tile.type==='destination'?'#1d3d52':tile.type==='source'?'#234657':'#2f4e60';
+      const fill=tile.type==='park'?'#283332':tile.type==='switch'?'#63503a':tile.type==='destination'?'#334348':tile.type==='source'?'#33454b':'#424c50';
       round(x,y,tileSize,tileSize,2,fill);ctx.save();round(x,y,tileSize,tileSize,2);ctx.clip();
-      if(tile.type==='park')drawPark(tile.decor,x,y,tileSize);else if(tile.type==='source'||tile.type==='destination')drawBuilding(tile,x,y,tileSize);else drawRoad(tile,x,y,tileSize,routeCells.has(i));ctx.restore();
+      if(tile.type==='socket')drawSocket(x,y,tileSize);else if(tile.type==='park')drawPark(tile.decor,x,y,tileSize);else if(tile.type==='source'||tile.type==='destination')drawBuilding(tile,x,y,tileSize);else drawRoad(tile,x,y,tileSize,routeCells.has(i));ctx.restore();
       if(hint===i||preview&&route&&!route.ok&&route.at===i){ctx.lineWidth=3;round(x+2,y+2,tileSize-4,tileSize-4,1,null,hint===i?colors.purple:'#ff8b52');ctx.lineWidth=1;}
-      if(isEditable(tile)&&!animation&&!isComplete(state,level))hits.push({id:`tile-${i}`,x,y,w:tileSize,h:tileSize,fn:()=>{if(animation||isComplete(state,level))return;state=turnTile(state,i);hint=-1;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';sound(tile.type==='switch'?'switch':'turn');schedule();}});
+      if(selectedPanel===i){ctx.lineWidth=3;round(x+2,y+2,tileSize-4,tileSize-4,1,null,colors.yellow);ctx.lineWidth=1;}
+      if((isEditable(tile)||(crane&&tile.type==='socket'))&&!animation&&!state.failed&&!isComplete(state,level))hits.push({id:`tile-${i}`,x,y,w:tileSize,h:tileSize,fn:()=>{
+        if(animation||state.failed||adPending||isComplete(state,level))return;
+        if(crane){
+          if(tile.movable){selectedPanel=selectedPanel===i?-1:i;message=selectedPanel<0?'已放下路板。':'路板已选中，点击空槽完成吊装（1工时）。';}
+          else if(tile.type==='socket'&&selectedPanel>=0){state=movePanel(state,selectedPanel,i);selectedPanel=-1;message='路板已吊入空槽，可继续旋转接通道路。';sound('switch');failIfNeeded();}
+          else message='只可吊装带螺栓的路板；先点路板，再点空槽。';
+        }else{state=turnTile(state,i);hint=-1;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';sound(tile.type==='switch'?'switch':'turn');failIfNeeded();}schedule();
+      }});
     });
-    if(animation){const route=animation.outcome.result.path,t=Math.min(animation.elapsed/190,route.length-1),a=Math.floor(t),b=Math.min(a+1,route.length-1),f=t-a,from=route[a],to=route[b],col=(from%level.width)*(1-f)+(to%level.width)*f,row=Math.floor(from/level.width)*(1-f)+Math.floor(to/level.width)*f;const delta=to-from||(a>0?from-route[a-1]:1),angle=delta===1?0:delta===-1?Math.PI:delta>0?Math.PI/2:-Math.PI/2;drawCar(bx+col*(tileSize+gap)+tileSize/2,by+row*(tileSize+gap)+tileSize/2,tileSize*.76,animation.vehicle.destination==='bakery'?colors.yellow:colors.purple,angle);}
+    if(animation){const route=animation.outcome.result.path,t=Math.min(animation.elapsed/190,route.length-1),a=Math.floor(t),b=Math.min(a+1,route.length-1),f=t-a,from=route[a],to=route[b],col=(from%level.width)*(1-f)+(to%level.width)*f,row=Math.floor(from/level.width)*(1-f)+Math.floor(to/level.width)*f;const delta=to-from||(a>0?from-route[a-1]:1),angle=delta===1?0:delta===-1?Math.PI:delta>0?Math.PI/2:-Math.PI/2;drawCar(bx+col*(tileSize+gap)+tileSize/2,by+row*(tileSize+gap)+tileSize/2,tileSize*.76,animation.vehicle.destination==='bakery'?colors.yellow:colors.purple,angle);if(!animation.outcome.result.ok&&animation.elapsed>Math.max(0,(route.length-1)*190)){incidentFX(bx+col*(tileSize+gap)+tileSize/2,by+row*(tileSize+gap)+tileSize/2,tileSize,animation.elapsed-(route.length-1)*190);round(bx+8,by+8,bw-16,28,2,'#a5472c');text('紧急制动 · 前方道路未接通',bx+bw/2,by+22,12,'#fff0d7','center','700');}}
     else if(!isComplete(state,level)){const index=state.board.findIndex(t=>t.type==='source');drawCar(bx+(index%level.width)*(tileSize+gap)+tileSize/2,by+Math.floor(index/level.width)*(tileSize+gap)+tileSize*.46,tileSize*.5,currentVehicle().destination==='bakery'?colors.yellow:colors.purple);}
   }
   function drawMain(){
     const {margin:m,missionY,myStatus,footerY,footerH,compact}=layout,complete=isComplete(state,level),vehicle=currentVehicle()||level.vehicles.at(-1);
-    stripe(12,m,5,42);text('修好这条路',25,m+16,19,colors.ink,'left','700');text(`ROAD CREW  /  工段 ${String(level.id).padStart(2,'0')}`,25,m+36,9,colors.muted);
+    stripe(12,m,5,42);text('修好这条路',25,m+16,19,colors.ink,'left','700');text(`CITY RECONNECT  /  ${String(level.id).padStart(2,'0')}  /  金币 ${progress.coins}`,25,m+36,9,colors.muted);
     button('levels','路网',W-112,m,48,44,()=>{modal='levels';schedule();},{size:13});button('tools','工具',W-56,m,44,44,()=>{modal='tools';schedule();},{size:13});
     if(compact){
-      text(complete?'运输完成':`${vehicle.destination==='bakery'?'面包 → 面包店':'鲜花 → 花园'}  ${Math.min(state.nextVehicle+1,level.vehicles.length)}/${level.vehicles.length}`,12,missionY+10,12,colors.ink,'left','700');text(`${state.moves} 次 / 目标 ${level.par}`,W-14,missionY+10,11,colors.yellow,'right');
+      text(complete?'运输完成':`${vehicle.destination==='bakery'?'面包 → 面包店':'鲜花 → 花园'}  ${Math.min(state.nextVehicle+1,level.vehicles.length)}/${level.vehicles.length}`,12,missionY+10,12,colors.ink,'left','700');text(state.budget===null?`${state.moves} 次 / 目标 ${level.par}`:`工时 ${Math.max(0,state.budget-state.workSpent)} / 容错 ${state.incidentLimit-state.incidents}`,W-14,missionY+10,11,colors.yellow,'right');
     }else{
       drawCar(35,missionY+18,35,vehicle.destination==='bakery'?colors.yellow:colors.purple);
       text(complete?'本段运输完成':vehicle.destination==='bakery'?'面包运输 → 面包店':'鲜花运输 → 花园',61,missionY+11,13,colors.ink,'left','700');
       text(`${level.vehicles.length===2?'双车接力':'单车任务'} · ${Math.min(state.nextVehicle+1,level.vehicles.length)}/${level.vehicles.length}`,61,missionY+29,11,colors.muted);
-      text(`${state.moves} 次`,W-14,missionY+11,15,colors.yellow,'right','700');text(`目标 ${level.par}`,W-14,missionY+29,10,colors.muted,'right');
+      text(state.budget===null?`${state.moves} 次`:`余 ${Math.max(0,state.budget-state.workSpent)} 工时`,W-14,missionY+11,14,colors.yellow,'right','700');text(state.incidentLimit===null?`目标 ${level.par}`:`容错 ${state.incidentLimit-state.incidents}`,W-14,missionY+29,10,colors.muted,'right');
     }
+    drawSkyline(missionY+47,layout.boardY-missionY-73);
     if(layout.boardY-missionY>70){text(`施工图 ${String(level.id).padStart(2,'0')} / ${level.title}`,12,layout.boardY-17,12,colors.muted);}
     drawBoard();
     if(layout.boardY+layout.boardSize+25<myStatus){text('黄色：面包   /   紫色：鲜花   /   橙色：岔口',W/2,layout.boardY+layout.boardSize+22,10,colors.muted,'center');}
-    const tip=message||(sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，继续修路。':level.id>=5?'先送面包，再切换橙色岔口送鲜花。':'点道路旋转，让车库与目的地接通。');
+    const tip=message||(level.id>10?level.note:sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，继续修路。':level.id>=5?'先送面包，再切换橙色岔口送鲜花。':'点道路旋转，让车库与目的地接通。');
     path([[13,myStatus+3],[13,myStatus+(compact?19:29)]],colors.yellow,3);wrap(tip,24,myStatus+9,W-38,compact?11:12,17,colors.ink,compact?1:2);
-    button('undo','撤销',12,footerY,52,footerH,()=>{state=undo(state);hint=-1;message='已撤销上一步。';schedule();},{disabled:!!animation||!state.history.length,size:13});
-    button('preview',preview?'收起路线':'看路线',70,footerY,70,footerH,()=>{preview=!preview;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';schedule();},{disabled:!!animation||complete,fill:preview?'#245c60':'#1c4054',color:preview?colors.green:colors.ink,size:12});
-    button('dispatch',animation?'运输中…':complete?'查看验收':'发车  →',146,footerY,W-158,footerH,send,{fill:colors.yellow,color:'#102b3c',size:17,disabled:!!animation});
+    const locked=!!animation||!!state.failed||adPending;
+    button('undo','撤销',12,footerY,48,footerH,()=>{state=undo(state);selectedPanel=-1;hint=-1;message=state.budget===null?'已撤销上一步。':'已撤销，但施工工时不退还。';schedule();},{disabled:locked||!state.history.length,size:12});
+    button('preview',preview?'收线':'预览',66,footerY,48,footerH,()=>{preview=!preview;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';schedule();},{disabled:locked||complete,fill:preview?'#245c60':'#1c4054',size:12});
+    if(level.id>=31){button('crane',crane?'旋转':'吊装',120,footerY,48,footerH,()=>{crane=!crane;selectedPanel=-1;message=crane?'吊装：先点螺栓路板，再点空槽。':'旋转模式：点击道路顺时针旋转。';schedule();},{disabled:locked||complete,fill:crane?colors.yellow:'#1c4054',color:crane?'#102b3c':colors.ink,size:12});}
+    const dx=level.id>=31?174:120;
+    button('dispatch',animation?'制动/运输':complete?'验收':'发车',dx,footerY,W-dx-12,footerH,send,{fill:colors.yellow,color:'#102b3c',size:17,disabled:locked});
   }
   function modalHeader(title,subtitle,closeId='close'){
-    hits=[];blueprint();stripe(12,12,W-24,7);text(title,16,48,24,colors.ink,'left','700');text(subtitle,16,76,11,colors.muted);
+    hits=[];blueprint();stripe(12,12,W-24,7);text(title,16,48,24,colors.ink,'left','700');wrap(subtitle,16,76,W-32,11,16,colors.muted,1);
     button(closeId,'×',W-60,30,44,44,()=>{modal=null;schedule();},{size:25});
   }
   function drawModal(){
     if(modal==='tools'){
-      modalHeader('施工工具箱','所有设置与帮助，都在游戏内。','close-tools');
-      const gap=10,bw=(W-34)/2,bh=64,y=106,complete=isComplete(state,level);
+      modalHeader('施工工具箱',message||'所有设置与帮助，都在游戏内。','close-tools');
+      const gap=10,bw=(W-34)/2,bh=54,y=100,complete=isComplete(state,level);
       button('hint','定位断点',12,y,bw,bh,()=>{modal=null;showHint();},{disabled:!!animation||complete,color:colors.purple,size:16});
       button('reset','重开本段',22+bw,y,bw,bh,()=>load(level.id),{disabled:!!animation,size:16});
-      button('sound',progress.sound?'声音：开':'声音：关',12,y+76,bw,bh,()=>{progress.sound=!progress.sound;platform.audio.setMuted(!progress.sound);save();sound('turn');schedule();},{size:16});
-      button('help','施工手册',22+bw,y+76,bw,bh,()=>{modal='help';schedule();},{size:16});
-      if(sidebarState?.available)button('sidebar',sidebarState.pending?'侧边栏打开中…':'侧边栏 ↗',12,y+152,W-24,52,openSidebar,{disabled:sidebarState.pending,size:14});
-      const noteY=y+(sidebarState?.available?224:170);
-      wrap(sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，进度没有变化。':message.includes('侧边栏')?message:storageOK?'本机自动保存通关与最好成绩。无账号、无广告、无云存档。':'本机存储暂时不可用，仍可继续玩。',16,noteY,W-32,12,20,colors.muted,sidebarState?.available?2:3);
+      button('sound',progress.sound?'声音：开':'声音：关',12,y+64,bw,bh,()=>{progress.sound=!progress.sound;platform.audio.setMuted(!progress.sound);save();sound('turn');schedule();},{size:16});
+      button('help','施工手册',22+bw,y+64,bw,bh,()=>{modal='help';schedule();},{size:16});
+      if(sidebarState?.available)button('sidebar',sidebarState.pending?'侧边栏打开中…':'侧边栏 ↗',12,y+192,W-24,52,openSidebar,{disabled:sidebarState.pending,size:14});
+      button('work-tool',state.toolUsed?'加班券已用':'+6工时 · 12金币',12,y+128,W-24,52,buyWork,{disabled:!!animation||state.budget===null||state.toolUsed||!!state.failed||complete,size:14});
+      const noteY=y+(sidebarState?.available?252:192);
+      if(!sidebarState?.available||H>510)wrap(sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，进度没有变化。':message?message:storageOK?`金币 ${progress.coins} · 首次通关+20。仅用于限定道具/复活，无充值。`:'本机存储暂时不可用，仍可继续玩。',16,noteY,W-32,12,20,colors.muted,sidebarState?.available?2:3);
       button('continue','继续修路  →',12,H-68,W-24,52,()=>{modal=null;schedule();},{fill:colors.yellow,color:'#102b3c',size:16});
     }else if(modal==='levels'){
-      modalHeader('施工路网','10 个工段全部开放 · 05 起为双车接力');
-      const gap=7,bw=(W-24-gap*4)/5,y=H<500?104:120,stride=H<500?82:94,bh=H<500?58:66;
-      LEVELS.forEach((l,i)=>{const x=12+(i%5)*(bw+gap),yy=y+Math.floor(i/5)*stride;button(`level-${l.id}`,String(l.id).padStart(2,'0'),x,yy,bw,bh,()=>load(l.id),{fill:level.id===l.id?colors.yellow:'#1c4054',color:level.id===l.id?'#102b3c':colors.ink,size:21});const best=progress.bestMoves[l.id];text(best===undefined?(l.id>=5?'双车':'单车'):'★'.repeat(starsFor(best,l.par)),x+bw/2,yy+bh+13,10,best===undefined?colors.muted:colors.yellow,'center');});
-      text(`已验收 ${progress.completed.length} / 10 个工段`,16,y+2*stride+22,16,colors.green,'left','700');wrap('换关会重开当前施工段，已通关记录和最好成绩会保留。',16,y+2*stride+50,W-32,12,20,colors.muted,2);
+      modalHeader('城市复线',`50 个工段 · ${CHAPTERS[mapPage]} · 已完成 ${progress.completed.length}/50`);
+      const tabW=(W-40)/5;
+      for(let c=0;c<5;c++)button(`chapter-${c}`,`${c*10+1}–${c*10+10}`,12+c*(tabW+4),96,tabW,44,()=>{mapPage=c;schedule();},{fill:mapPage===c?colors.yellow:'#1c4054',color:mapPage===c?'#172a35':colors.ink,size:11});
+      const gap=7,bw=(W-24-gap*4)/5,y=158,stride=78,bh=54;
+      LEVELS.slice(mapPage*10,mapPage*10+10).forEach((l,i)=>{const x=12+(i%5)*(bw+gap),yy=y+Math.floor(i/5)*stride;button(`level-${l.id}`,String(l.id).padStart(2,'0'),x,yy,bw,bh,()=>load(l.id),{fill:level.id===l.id?colors.yellow:'#1c4054',color:level.id===l.id?'#102b3c':colors.ink,size:21});const best=progress.bestMoves[l.id];text(best===undefined?(l.id<=10?'练习':l.transfers?.length?'吊装':'工时'):'★'.repeat(starsFor(best,l.par)),x+bw/2,yy+bh+13,10,best===undefined?colors.muted:colors.yellow,'center');});
+      if(H>480)wrap(['1–5 入门，6–10 正常体验。','11关起工时耗尽或故障容错用完会停工。','双车共用道路；预览免费，先规划再发车。','螺栓路板可以吊到空槽，搬运消耗1工时。','先完成第一车，再回收旧路补第二条支路。'][mapPage],16,336,W-32,12,20,colors.muted,2);
       button('back-map','回到施工现场',12,H-68,W-24,52,()=>{modal=null;schedule();},{fill:colors.yellow,color:'#102b3c',size:16});
     }else if(modal==='help'){
       modalHeader('施工手册','接通道路，再安排车辆出发。','close-manual');
-      const items=[['01  转动道路','点击道路转90°。建筑和锥桶不能动。'],['02  看路线，再发车','黄色车送面包，紫色车送鲜花。走错路没有惩罚。'],['03  双车要换岔口','05关起先送面包，再点橙色路口切换方向，最后送鲜花。']];
+      const items=[['01  转动道路','点击道路转90°。建筑和锥桶不能动。'],['02  工时有限，预览免费','11关起误操作会耗工时，错误发车损失容错；撤销不退工时。'],['03  路板要循环使用','31关起吊装螺栓路板到空槽；41关起先送首车再回收旧路。']];
       items.forEach(([title,body],i)=>{const y=116+i*86;path([[16,y-10],[16,y+51]],i===2?colors.yellow:colors.green,3);text(title,28,y,16,colors.ink,'left','700');wrap(body,28,y+25,W-45,12,19,colors.muted,2);});
       button('close-help','明白了，开工！',12,H-68,W-24,52,()=>{modal=null;schedule();},{fill:colors.yellow,color:'#102b3c',size:16});
+    }else if(modal==='failed'){
+      modalHeader('施工暂停',state.failed==='incidents'?'运输事故次数已达到本段容错上限。':'施工工时已耗尽，当前布置不能继续施工。','close-failed');
+      const close=hits.find(h=>h.id==='close-failed');if(close)close.fn=()=>{modal='levels';schedule();};
+      // Failure is a reversible local run state. Restart never costs currency.
+      const y=H<500?98:118;stripe(16,y,W-32,10);text(state.failed==='incidents'?'紧急制动 · 道路封控':'工时耗尽 · 重新规划',W/2,y+38,21,'#f59e71','center','700');
+      wrap(message||'本段初始状态可解。免费重开可重新规划，不需要看广告。',18,y+72,W-36,12,20,colors.muted,2);
+      const yy=Math.min(y+126,H-234);
+      button('coin-revive',state.revived?'本局复活已使用':'20金币复活 · +10工时',12,yy,W-24,48,coinRevive,{disabled:state.revived||adPending,size:14});
+      const rs=rewardService?.getState?.();button('ad-revive',rs?.mode==='mock'?'模拟广告复活（测试）':'广告复活（预留未启用）',12,yy+58,W-24,48,requestRevive,{disabled:state.revived||adPending,size:14});
+      button('free-restart','免费重开本段',12,H-68,W-24,52,()=>load(level.id),{fill:colors.yellow,color:'#172a35',size:17});
+    }else if(modal==='mock-ad'||modal==='ad-wait'){
+      modalHeader(modal==='mock-ad'?'模拟广告测试':'等待广告结果','本页不是真实广告，不产生收入。','close-ad');
+      // Replace the header close callback: invalidate this run's pending reward.
+      const close=hits.find(h=>h.id==='close-ad');if(close)close.fn=()=>{rewardService?.cancel?.();modal='failed';schedule();};
+      wrap('只有“完整观看”才测试一次复活。提前关闭、无填充、错误都不得获得奖励。',18,104,W-36,12,18,colors.muted,3);
+      if(modal==='mock-ad'){
+        const choices=[['completed','模拟完整观看'],['cancelled','模拟提前关闭'],['unavailable','模拟无填充'],['error','模拟广告异常']];
+        choices.forEach(([status,label],i)=>button(`mock-${status}`,label,12,158+i*50,W-24,46,()=>{rewardService.resolveMock(status);hits=[];},{fill:i===0?colors.yellow:'#1c4054',color:i===0?'#172a35':colors.ink,size:14}));
+      }
+      button('ad-restart','不等广告，免费重开',12,H-58,W-24,46,()=>load(level.id),{size:14});
     }else if(modal==='win'){
       modalHeader('工段验收通过',progress.completed.length===LEVELS.length?'整座路网已经恢复畅通。':`施工段 ${String(level.id).padStart(2,'0')} · ${level.title}`,'close-win');
       const cy=Math.max(120,Math.min(H*.4,H-292,240));
-      stripe(30,cy-40,W-60,10);text('★'.repeat(starsFor(state.moves,level.par)),W/2,cy+12,45,colors.yellow,'center','700');text('运输任务完成',W/2,cy+64,24,colors.ink,'center','700');text(`${state.moves} 次转动  /  ${level.vehicles.length} 辆车送达`,W/2,cy+102,14,colors.green,'center');text(`三星目标：${level.par} 次以内`,W/2,cy+128,12,colors.muted,'center');
-      button('next',level.id===10?'查看完整路网  →':'进入下一工段  →',12,H-132,W-24,52,()=>{if(level.id===10){modal='levels';schedule();}else load(level.id+1);},{fill:colors.yellow,color:'#102b3c',size:16});
+      stripe(30,cy-40,W-60,10);text('★'.repeat(starsFor(state.moves,level.par)),W/2,cy+12,45,colors.yellow,'center','700');text('运输任务完成',W/2,cy+64,24,colors.ink,'center','700');text(`${state.moves} 次转动  /  ${level.vehicles.length} 辆车送达`,W/2,cy+102,14,colors.green,'center');text(`三星目标：${level.par} 次以内 / ${winAward?'+20金币':'本段金币已领'}`,W/2,cy+128,12,colors.muted,'center');
+      button('next',level.id===LEVELS.length?'查看完整路网  →':'进入下一工段  →',12,H-132,W-24,52,()=>{if(level.id===LEVELS.length){modal='levels';schedule();}else load(level.id+1);},{fill:colors.yellow,color:'#102b3c',size:16});
       button('replay','重新挑战本段',12,H-68,W-24,52,()=>load(level.id),{size:15});
     }
   }
   function drawFrame(time){
     frameId=null;if(destroyed||paused)return;
-    if(animation){if(previousTime!==null)animation.elapsed+=Math.min(100,Math.max(0,time-previousTime));previousTime=time;if(animation.elapsed>=animation.duration)finishDelivery();}
+    if(animation&&!adPending){if(previousTime!==null)animation.elapsed+=Math.min(100,Math.max(0,time-previousTime));previousTime=time;if(animation.elapsed>=animation.duration)finishDelivery();}
     const size=platform.getSize(),{width,height,dpr}=size,raw=size.safeInsets||{};
     const inset=(value,max)=>Math.max(0,Math.min(Number(value)||0,max));
     const safe={top:inset(raw.top,height/3),right:inset(raw.right,width/4),bottom:inset(raw.bottom,height/3),left:inset(raw.left,width/4)};
@@ -390,12 +561,61 @@ function startGame(platform) {
   }),platform.onResize(()=>{gesture=null;hits=[];schedule();}),platform.onPause(()=>{paused=true;gesture=null;previousTime=null;if(frameId!==null){platform.cancelFrame(frameId);frameId=null;}}),platform.onResume(()=>{paused=false;previousTime=null;schedule();})];
   if(typeof platform.sidebar?.subscribe==='function')unsubscribers.push(platform.sidebar.subscribe(value=>{sidebarState=value;schedule();}));
   schedule();
-  return {destroy(){destroyed=true;animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,sidebar:sidebarState?{...sidebarState}:null,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform},layout:{...layout,safeInsets:{...layout.safeInsets}},design:'road-crew-phone-v3'};}};
+  return {destroy(){destroyed=true;cancelReward();rewardService?.destroy?.();animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,sidebar:sidebarState?{...sidebarState}:null,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform},layout:{...layout,safeInsets:{...layout.safeInsets}},design:'road-city-reconnect-v4',campaignSize:LEVELS.length,crane,selectedPanel,coins:progress.coins,workSpent:state.workSpent,budget:state.budget,incidents:state.incidents,incidentLimit:state.incidentLimit,failed:state.failed,revived:state.revived,toolUsed:state.toolUsed,rewards:rewardService?.getState?.()||{mode:'disabled'},adPending,runId};}};
+}
+
+// Source: adapters/rewarded.js
+// Platform-neutral reward gate. Live is deliberately disabled unless explicitly
+// enabled with a real unit and verified no-share fallback configuration.
+function createRewardedService({mode='disabled',api=null,adUnitId='',shareFallbackDisabled=false,timers={}}={}) {
+  const setTimer=timers.setTimeout||(typeof globalThis.setTimeout==='function'?globalThis.setTimeout.bind(globalThis):()=>null),clearTimer=timers.clearTimeout||(typeof globalThis.clearTimeout==='function'?globalThis.clearTimeout.bind(globalThis):()=>{});
+  let active=null,serial=0,destroyed=false,retiring=false,retireFailed=false;
+  const liveReady=mode==='live'&&api&&typeof api.createRewardedVideoAd==='function'&&typeof adUnitId==='string'&&adUnitId.trim().length>0&&!/placeholder|YOUR_|test|mock|xxxx/i.test(adUnitId)&&shareFallbackDisabled===true;
+  const actualMode=mode==='mock'?'mock':liveReady?'live':'disabled';
+  function finish(session,status) {
+    if(!session||session.done||active!==session)return;
+    session.done=true;active=null;clearTimer(session.timer);
+    if(session.ad){
+      try{session.ad.offClose?.(session.close);}catch{}
+      try{session.ad.offError?.(session.error);}catch{}
+      retiring=true;
+      try{Promise.resolve(session.ad.destroy?.()).catch(()=>{retireFailed=true;}).finally(()=>{retiring=false;});}catch{retiring=false;retireFailed=true;}
+    }
+    session.resolve({status,requestId:session.id});
+  }
+  return {
+    getState:()=>({mode:actualMode,available:!destroyed&&actualMode!=='disabled'&&!retiring&&!retireFailed,busy:!!active,retiring,retireFailed}),
+    request({placement='revive',context=null}={}) {
+      const id=`road-reward-${++serial}`;
+      if(destroyed||active||retiring||retireFailed||actualMode==='disabled')return Promise.resolve({status:'unavailable',requestId:id});
+      return new Promise(resolve=>{
+        const session={id,placement,context,resolve,done:false,ad:null,timer:null};active=session;
+        session.timer=setTimer(()=>finish(session,'error'),90000);
+        if(actualMode==='mock')return;
+        try{
+          session.ad=api.createRewardedVideoAd({adUnitId,multiton:false});
+          if(!session.ad||typeof session.ad.onClose!=='function'||typeof session.ad.onError!=='function'||typeof session.ad.show!=='function'||typeof session.ad.destroy!=='function'){finish(session,'unavailable');return;}
+          session.close=res=>{
+            const complete=res?.isEnded===true&&(res.count===undefined||(Number.isFinite(res.count)&&res.count>=1));
+            finish(session,complete?'completed':'cancelled');
+          };
+          session.error=err=>finish(session,Number(err?.errCode??err?.errNo)===1004?'unavailable':'error');
+          session.ad.onClose(session.close);session.ad.onError(session.error);
+          Promise.resolve(session.ad.show()).catch(session.error);
+        }catch{finish(session,'error');}
+      });
+    },
+    resolveMock(status){if(actualMode==='mock'&&['completed','cancelled','unavailable','error'].includes(status))finish(active,status);},
+    cancel(){finish(active,'cancelled');},
+    destroy(){destroyed=true;finish(active,'cancelled');}
+  };
 }
 
 // Source: adapters/browser.js
+
 // DOM access is isolated to this browser adapter. Not shipped in the tt build.
 function createBrowserPlatform(canvas, host = window, audioPaths = {}) {
+  const rewards=createRewardedService({mode:'mock',timers:{setTimeout:host.setTimeout?.bind(host),clearTimeout:host.clearTimeout?.bind(host)}});
   const listeners = { pointer: new Set(), resize: new Set(), pause: new Set(), resume: new Set() };
   const removers = [];
   const emit = (name, value) => listeners[name].forEach(fn => fn(value));
@@ -446,8 +666,8 @@ function createBrowserPlatform(canvas, host = window, audioPaths = {}) {
     onPointer: subscribe('pointer'), onResize: subscribe('resize'), onPause: subscribe('pause'), onResume: subscribe('resume'),
     requestFrame: fn => host.requestAnimationFrame(fn), cancelFrame: id => host.cancelAnimationFrame(id),
     storage: { getItem: key => host.localStorage.getItem(key), setItem: (key, value) => host.localStorage.setItem(key, value) },
-    audio,
-    destroy() { removers.forEach(fn => fn()); sounds.forEach(sound => sound.pause()); Object.values(listeners).forEach(set => set.clear()); }
+    audio, rewards,
+    destroy() { rewards.destroy(); removers.forEach(fn => fn()); sounds.forEach(sound => sound.pause()); Object.values(listeners).forEach(set => set.clear()); }
   };
 }
 

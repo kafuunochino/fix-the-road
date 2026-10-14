@@ -1,0 +1,16 @@
+{
+  "status": "superseded-not-for-upload",
+  "reason": "50-stage city reconstruction campaign supersedes 0.2.0; no upload performed.",
+  "previous": {
+    "appid": "tt0b947d2995edc0c502",
+    "projectname": "修好这条路",
+    "version": "0.2.0",
+    "files": {
+      "game.js": "26d6f6582cf19213130d0916ee626436c546a9b123b3b1403ca95f2e4cbcad9f",
+      "game.json": "d1180a9a99f80b72cf2d44013d0462a6824f355b12c0ae7bddb3ced53cb584ce",
+      "project.config.json": "b7a31bc4413753f2e406b6a3f550105c21351868fac0e028b871a74b49169b76",
+      "assets/tap.wav": "1d2b6229ca59779073d214b2770e798e9556e131bd5a94c2530bd907401d7b63"
+    }
+  },
+  "replacementVersion": "0.3.0"
+}

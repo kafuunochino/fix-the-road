@@ -1,5 +1,7 @@
+import { createRewardedService } from './rewarded.js';
 // DOM access is isolated to this browser adapter. Not shipped in the tt build.
 export function createBrowserPlatform(canvas, host = window, audioPaths = {}) {
+  const rewards=createRewardedService({mode:'mock',timers:{setTimeout:host.setTimeout?.bind(host),clearTimeout:host.clearTimeout?.bind(host)}});
   const listeners = { pointer: new Set(), resize: new Set(), pause: new Set(), resume: new Set() };
   const removers = [];
   const emit = (name, value) => listeners[name].forEach(fn => fn(value));
@@ -50,7 +52,7 @@ export function createBrowserPlatform(canvas, host = window, audioPaths = {}) {
     onPointer: subscribe('pointer'), onResize: subscribe('resize'), onPause: subscribe('pause'), onResume: subscribe('resume'),
     requestFrame: fn => host.requestAnimationFrame(fn), cancelFrame: id => host.cancelAnimationFrame(id),
     storage: { getItem: key => host.localStorage.getItem(key), setItem: (key, value) => host.localStorage.setItem(key, value) },
-    audio,
-    destroy() { removers.forEach(fn => fn()); sounds.forEach(sound => sound.pause()); Object.values(listeners).forEach(set => set.clear()); }
+    audio, rewards,
+    destroy() { rewards.destroy(); removers.forEach(fn => fn()); sounds.forEach(sound => sound.pause()); Object.values(listeners).forEach(set => set.clear()); }
   };
 }

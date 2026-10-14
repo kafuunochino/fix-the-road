@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { LEVELS } from '../src/levels.js';
-import { ports, createState, traceRoute, turnTile, dispatch, undo, isComplete, normalizeProgress, starsFor } from '../src/rules.js';
+import { movePanel, ports, createState, traceRoute, turnTile, dispatch, undo, isComplete, normalizeProgress, starsFor } from '../src/rules.js';
 
 test('rotation ports and switches are deterministic', () => {
   assert.deepEqual(ports({ type: 'straight', rotation: 1 }), [1, 3]);
@@ -9,11 +9,12 @@ test('rotation ports and switches are deterministic', () => {
   assert.deepEqual(ports({ type: 'switch', stem: 3, exits: [0, 1], switchState: 1 }), [3, 1]);
 });
 for (const level of LEVELS) {
-  test(`handcrafted level ${level.id} has a replayable complete solution`, () => {
+  test(`reference level ${level.id} has a replayable complete solution`, () => {
     let state = createState(level);
     assert.equal(traceRoute(level, state.board, level.vehicles[0]).ok, false, 'level starts unsolved');
     for (const action of level.solution) {
       if (action.type === 'turn') state = turnTile(state, action.index);
+      else if(action.type==='move') state=movePanel(state,action.from,action.to);
       else {
         const sent = dispatch(state, level);
         assert.equal(sent.result.ok, true, JSON.stringify(sent.result));
@@ -82,6 +83,7 @@ test('every solution follows the exact authored route, not an accidental shortcu
     let state = createState(level), deliveries = 0;
     for (const action of level.solution) {
       if (action.type === 'turn') state = turnTile(state, action.index);
+      else if(action.type==='move') state=movePanel(state,action.from,action.to);
       else {
         const sent = dispatch(state, level);
         assert.deepEqual(sent.result.path, level.routes[deliveries].map(([r,c]) => r * level.width + c), `level ${level.id} vehicle ${deliveries}`);
@@ -157,14 +159,14 @@ test('fresh state resets turns, deliveries and history without sharing mutable b
 test('undoing the entire solution restores exact initial state including both deliveries', () => {
   for (const level of LEVELS) {
     let state = createState(level);
-    for (const action of level.solution) state = action.type === 'turn' ? turnTile(state, action.index) : dispatch(state, level).state;
+    for (const action of level.solution) state = action.type === 'turn' ? turnTile(state, action.index) : action.type==='move'?movePanel(state,action.from,action.to):dispatch(state, level).state;
     while (state.history.length) state = undo(state);
-    assert.deepEqual(state, createState(level));
+    assert.deepEqual(state, {...createState(level),workSpent:level.budget===undefined?0:level.par});
   }
 });
 
 test('progress version mismatch and unknown current levels reset safely', () => {
-  assert.deepEqual(normalizeProgress({ version: 2, completed: [1], sound: true }, [1]), normalizeProgress(null, [1]));
+  assert.deepEqual(normalizeProgress({ version: 99, completed: [1], sound: true }, [1]), normalizeProgress(null, [1]));
   const progress = normalizeProgress({version: 1, completed: 'all', lastLevel: 2, bestMoves: {2: Number.MAX_SAFE_INTEGER}}, [1,2]);
   assert.deepEqual(progress.completed, []); assert.deepEqual(progress.bestMoves, {}); assert.equal(progress.lastLevel, 2);
 });
