@@ -1,0 +1,16 @@
+{
+  "status": "superseded-not-for-upload",
+  "reason": "Phone-first Canvas UI redesign supersedes the prior candidate. No platform upload or release was performed by this task.",
+  "previous": {
+    "appid": "tt0b947d2995edc0c502",
+    "projectname": "修好这条路",
+    "version": "0.1.0",
+    "files": {
+      "game.js": "7c428ff7880fcf042e316e96f2ee2d4f5c840d872ded7f49c279abc2ae7636e3",
+      "game.json": "d1180a9a99f80b72cf2d44013d0462a6824f355b12c0ae7bddb3ced53cb584ce",
+      "project.config.json": "3f8932677fe4dbae84990ddd930f943a02ef164dedcacb04ad15b3468a2ef3b7",
+      "assets/tap.wav": "1d2b6229ca59779073d214b2770e798e9556e131bd5a94c2530bd907401d7b63"
+    }
+  },
+  "replacementVersion": "0.2.0"
+}

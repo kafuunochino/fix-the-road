@@ -1,0 +1,131 @@
+{
+  "version": "0.2.0",
+  "reviewDate": "2026-10-14",
+  "design": "Phone-first road construction blueprint, all UI rendered within Canvas",
+  "featuresPreserved": [
+    "10 levels",
+    "two-vehicle relay and shared switch",
+    "undo including delivery",
+    "reset",
+    "route preview",
+    "hint",
+    "level selection",
+    "sound",
+    "local progress",
+    "help",
+    "guarded optional Douyin sidebar"
+  ],
+  "tests": {
+    "command": "npm run check",
+    "passed": 77,
+    "failed": 0,
+    "exactStandaloneHtml": true,
+    "rulesAndSource": "Existing 64 checks retained, adjusted only for actual game-menu navigation",
+    "phoneChecks": "13 added checks including 8 viewport runs completing all 10 levels, safe areas, 44 CSS pixel active targets, menu/goal text separation, lifecycle and TT safe-area propagation; stage ten alone does not claim all ten cleared; optional host capsule clearance and failure fallback"
+  },
+  "viewports": [
+    {
+      "width": 320,
+      "height": 480,
+      "safeInsets": {
+        "top": 20,
+        "right": 0,
+        "bottom": 16,
+        "left": 0
+      }
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "safeInsets": {
+        "top": 44,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      }
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "safeInsets": {
+        "top": 44,
+        "right": 12,
+        "bottom": 34,
+        "left": 12
+      }
+    },
+    {
+      "width": 360,
+      "height": 740,
+      "safeInsets": {
+        "top": 24,
+        "right": 0,
+        "bottom": 24,
+        "left": 0
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "safeInsets": {
+        "top": 47,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      }
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "safeInsets": {
+        "top": 59,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "safeInsets": {
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      }
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "safeInsets": {
+        "top": 92,
+        "right": 0,
+        "bottom": 34,
+        "left": 0
+      }
+    }
+  ],
+  "visualReview": {
+    "method": "Approximate native Canvas rasterization of exact HTML with registered Noto CJK font",
+    "screens": [
+      "main play",
+      "six-column final level",
+      "toolbox",
+      "help",
+      "short-screen result"
+    ],
+    "realBrowser": false,
+    "realDevice": false,
+    "officialPlatform": false
+  },
+  "standalone": {
+    "path": "deliverables/fix-the-road-demo.html",
+    "bytes": 62436,
+    "sha256": "df42b2197cf697362749a7a6e6aa3f7743889616c04c7069e8c705cd57e611c6"
+  },
+  "frozenCandidateManifestSha256": "36ae02e8f3d8b9be11d7830073478536f633a12229cd67835112dad01a8d6833",
+  "networkRequired": false,
+  "runtimeDependencies": [],
+  "uploaded": false,
+  "published": false
+}

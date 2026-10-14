@@ -12,9 +12,15 @@ export function createTTPlatform(api, scheduler, audioPaths = {}) {
   let size;
   function resize() {
     const info = api.getSystemInfoSync();
-    const next = { width: info.windowWidth || info.screenWidth, height: info.windowHeight || info.screenHeight, dpr: Math.min(info.pixelRatio || 1, 3) };
+    const width=info.windowWidth||info.screenWidth,height=info.windowHeight||info.screenHeight,area=info.safeArea||{};
+    const bounded=(n,max)=>Math.max(0,Math.min(Number(n)||0,max));
+    const safeInsets={top:bounded(area.top,height/3),left:bounded(area.left,width/4),right:bounded(width-(area.right??((area.left||0)+(area.width||width))),width/4),bottom:bounded(height-(area.bottom??((area.top||0)+(area.height||height))),height/3)};
+    // Some hosts place their own menu capsule below the OS notch area.
+    // Reserve its bottom edge when the optional host API is available.
+    try { const menu=api.getMenuButtonBoundingClientRect?.(); if(Number.isFinite(menu?.bottom)&&menu.bottom>0)safeInsets.top=Math.max(safeInsets.top,bounded(menu.bottom+8,height/3)); } catch { /* Optional capability; keep the OS safe area. */ }
+    const next = { width, height, dpr: Math.min(info.pixelRatio || 1, 3), safeInsets };
     if (!(next.width > 0 && next.height > 0)) throw new Error('Platform viewport dimensions are missing');
-    if (size && next.width === size.width && next.height === size.height && next.dpr === size.dpr) return;
+    if (size && next.width === size.width && next.height === size.height && next.dpr === size.dpr && JSON.stringify(next.safeInsets)===JSON.stringify(size.safeInsets)) return;
     size = next;
     canvas.width = Math.round(size.width * size.dpr);
     canvas.height = Math.round(size.height * size.dpr);

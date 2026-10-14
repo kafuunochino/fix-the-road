@@ -28,7 +28,8 @@ test('generated Douyin entry boots, draws, accepts input and stores state withou
   vm.runInNewContext(fs.readFileSync(root+'dist/douyin/game.js','utf8'),context,{timeout:1000});host.tick();
   assert.equal('window' in context,false);assert.equal('document' in context,false);assert.equal('localStorage' in context,false);
   assert.equal(host.calls.filter(c=>c[0]==='createCanvas').length,1);assert.ok(host.calls.some(c=>c[0]==='fillText'&&c[1]==='修好这条路'));
-  host.emit('TouchStart',{changedTouches:[{identifier:1,clientX:321,clientY:36}]});host.emit('TouchEnd',{changedTouches:[{identifier:1,clientX:321,clientY:36}]});host.tick();
+  const tapText=label=>{const hit=host.calls.findLast(c=>c[0]==='fillText'&&c[1]===label);assert.ok(hit,label);host.emit('TouchStart',{changedTouches:[{identifier:1,clientX:hit[2],clientY:hit[3]}]});host.emit('TouchEnd',{changedTouches:[{identifier:1,clientX:hit[2],clientY:hit[3]}]});host.tick();};
+  tapText('工具');tapText('声音：关');
   assert.equal(JSON.parse(host.data.get('fix-the-road-v1')).sound,true);
   host.emit('Hide');assert.equal(host.frames.size,0);host.emit('Show');assert.equal(host.frames.size,1);host.tick();
 });
@@ -69,8 +70,11 @@ test('built tt candidate navigates only from a supported canvas sidebar tap and 
   host.api.checkScene=options=>{assert.equal(options.scene,'sidebar');options.success({isExist:true});};
   host.api.navigateToScene=options=>navigations.push(options);
   vm.runInNewContext(fs.readFileSync(root+'dist/douyin/game.js','utf8'),{tt:host.api,...host.scheduler},{timeout:1000});host.tick();
-  assert.equal(navigations.length,0);assert.ok(host.calls.some(c=>c[0]==='fillText'&&c[1]==='侧边栏 ↗'));
-  const tap=()=>{host.emit('TouchStart',{changedTouches:[{identifier:1,clientX:250,clientY:36}]});host.emit('TouchEnd',{changedTouches:[{identifier:1,clientX:250,clientY:36}]});};
+  assert.equal(navigations.length,0);
+  const toolsButton=host.calls.findLast(c=>c[0]==='fillText'&&c[1]==='工具');assert.ok(toolsButton);
+  host.emit('TouchStart',{changedTouches:[{identifier:1,clientX:toolsButton[2],clientY:toolsButton[3]}]});host.emit('TouchEnd',{changedTouches:[{identifier:1,clientX:toolsButton[2],clientY:toolsButton[3]}]});host.tick();
+  assert.ok(host.calls.some(c=>c[0]==='fillText'&&c[1]==='侧边栏 ↗'));
+  const tap=()=>{const hit=host.calls.findLast(c=>c[0]==='fillText'&&c[1]==='侧边栏 ↗');host.emit('TouchStart',{changedTouches:[{identifier:1,clientX:hit[2],clientY:hit[3]}]});host.emit('TouchEnd',{changedTouches:[{identifier:1,clientX:hit[2],clientY:hit[3]}]});};
   tap();host.tick();tap();assert.equal(navigations.length,1);assert.equal(navigations[0].scene,'sidebar');
   navigations[0].success({});await Promise.resolve();host.tick();assert.equal(host.data.size,0,'sidebar callback grants no progress or reward');
   host.calls.length=0;host.emit('Show',{launch_from:'homepage',location:'sidebar_card'});host.tick();assert.ok(host.calls.some(c=>c[0]==='fillText'&&String(c[1]).startsWith('欢迎从侧边栏回来')));

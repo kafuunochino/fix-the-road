@@ -28,8 +28,8 @@ for(const level of LEVELS)test(`Canvas flow completes level ${level.id} using on
 
 test('Canvas failure, preview, hint, undo and reset remain usable',()=>{
   const app=makePlatform();app.tap('dispatch');app.finish();assert.equal(app.game.getSnapshot().nextVehicle,0);assert.equal(app.game.getSnapshot().preview,true);
-  app.tap('preview');assert.equal(app.game.getSnapshot().preview,false);app.tap('hint');assert.ok(app.game.getSnapshot().message.includes('道路')||app.game.getSnapshot().message.includes('该调整')||app.game.getSnapshot().message.includes('紫色框'));
-  const index=LEVELS[0].solution.find(a=>a.type==='turn').index;app.tap(`tile-${index}`);app.tap('undo');assert.equal(app.game.getSnapshot().moves,0);app.tap(`tile-${index}`);app.tap('reset');assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
+  app.tap('preview');assert.equal(app.game.getSnapshot().preview,false);app.tap('tools');app.tap('hint');assert.ok(app.game.getSnapshot().message.includes('道路')||app.game.getSnapshot().message.includes('该调整')||app.game.getSnapshot().message.includes('紫色框'));
+  const index=LEVELS[0].solution.find(a=>a.type==='turn').index;app.tap(`tile-${index}`);app.tap('undo');assert.equal(app.game.getSnapshot().moves,0);app.tap(`tile-${index}`);app.tap('tools');app.tap('reset');assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
 });
 
 test('shared-junction Canvas flow rejects the second delivery until switched',()=>{
@@ -41,7 +41,7 @@ test('shared-junction Canvas flow rejects the second delivery until switched',()
 });
 
 test('modal hit regions cannot leak to board, navigation cancels an in-flight car',()=>{
-  const app=makePlatform();app.tap('help');assert.equal(app.game.getSnapshot().modal,'help');assert.equal(app.game.getSnapshot().hitTargets.some(h=>h.id.startsWith('tile-')),false);app.tap('close-help');
+  const app=makePlatform();app.tap('tools');app.tap('help');assert.equal(app.game.getSnapshot().modal,'help');assert.equal(app.game.getSnapshot().hitTargets.some(h=>h.id.startsWith('tile-')),false);app.tap('close-help');
   app.tap('dispatch');assert.equal(app.game.getSnapshot().busy,true);assert.equal(app.game.getSnapshot().hitTargets.some(h=>h.id==='dispatch'),false);
   app.tap('levels');app.tap('level-10');app.finish();assert.equal(app.game.getSnapshot().levelId,10);assert.equal(app.game.getSnapshot().moves,0);assert.equal(app.game.getSnapshot().nextVehicle,0);app.game.destroy();
 });
@@ -56,7 +56,7 @@ test('touch coordinates stay correct after DPR and mobile-size changes',()=>{
 });
 
 test('storage denied and cancelled gestures cannot break gameplay',()=>{
-  const app=makePlatform({storageThrows:true});assert.equal(app.game.getSnapshot().storageOK,false);app.tap('sound');app.tap('levels');app.tap('level-2');assert.equal(app.game.getSnapshot().levelId,2);
+  const app=makePlatform({storageThrows:true});assert.equal(app.game.getSnapshot().storageOK,false);app.tap('tools');app.tap('sound');app.tap('close-tools');app.tap('levels');app.tap('level-2');assert.equal(app.game.getSnapshot().levelId,2);
   app.emit('pointer',{type:'down',x:50,y:100,id:7});app.emit('pointer',{type:'cancel',x:50,y:100,id:7});app.emit('pointer',{type:'up',x:50,y:100,id:7});assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
 });
 
@@ -67,10 +67,10 @@ test('a tap starting in a gap cannot activate a tile on release',()=>{
 });
 
 test('dispatch invalidates stale board and control hit targets before the next frame',()=>{
-  const app=makePlatform();const before=app.game.getSnapshot();const tile=before.hitTargets.find(h=>h.id.startsWith('tile-')),send=before.hitTargets.find(h=>h.id==='dispatch'),reset=before.hitTargets.find(h=>h.id==='reset');
+  const app=makePlatform();const before=app.game.getSnapshot();const tile=before.hitTargets.find(h=>h.id.startsWith('tile-')),send=before.hitTargets.find(h=>h.id==='dispatch'),control=before.hitTargets.find(h=>h.id==='preview');
   const rawTap=(hit,id)=>{app.emit('pointer',{type:'down',x:hit.x+hit.w/2,y:hit.y+hit.h/2,id});app.emit('pointer',{type:'up',x:hit.x+hit.w/2,y:hit.y+hit.h/2,id});};
   rawTap(send,1);assert.equal(app.game.getSnapshot().busy,true);assert.equal(app.game.getSnapshot().hitTargets.length,0);
-  rawTap(tile,2);rawTap(reset,3);assert.equal(app.game.getSnapshot().moves,before.moves);assert.equal(app.game.getSnapshot().busy,true);
+  rawTap(tile,2);rawTap(control,3);assert.equal(app.game.getSnapshot().moves,before.moves);assert.equal(app.game.getSnapshot().busy,true);
   app.finish();assert.equal(app.game.getSnapshot().moves,before.moves);app.game.destroy();
 });
 
@@ -88,11 +88,11 @@ test('dragging away and back does not turn a road',()=>{
 
 test('Canvas sidebar is hidden when unsupported and requires an explicit supported tap',async()=>{
   const unsupported=makePlatform({sidebar:{getState:()=>({available:false,pending:false}),subscribe:()=>()=>{},navigate:()=>{throw Error('must not navigate');}}});
-  assert.equal(unsupported.game.getSnapshot().hitTargets.some(h=>h.id==='sidebar'),false);unsupported.game.destroy();
+  unsupported.tap('tools');assert.equal(unsupported.game.getSnapshot().hitTargets.some(h=>h.id==='sidebar'),false);unsupported.game.destroy();
   let calls=0,listener,resolve;
   const sidebar={getState:()=>({available:true,pending:false,enteredFromSidebar:false}),subscribe:fn=>{listener=fn;return()=>{listener=null;};},navigate:()=>{calls++;listener({available:true,pending:true,enteredFromSidebar:false});return new Promise(r=>resolve=r);}};
-  const app=makePlatform({sidebar});assert.equal(calls,0);app.tap('sidebar');assert.equal(calls,1);assert.equal(app.game.getSnapshot().hitTargets.some(h=>h.id==='sidebar'),false);
-  listener({available:true,pending:false,enteredFromSidebar:false});resolve(false);await Promise.resolve();app.tick();assert.match(app.game.getSnapshot().message,/暂时无法/);assert.equal(app.game.getSnapshot().nextVehicle,0);assert.equal(app.game.getSnapshot().moves,0);
+  const app=makePlatform({sidebar});assert.equal(calls,0);app.tap('tools');app.tap('sidebar');assert.equal(calls,1);assert.equal(app.game.getSnapshot().hitTargets.some(h=>h.id==='sidebar'),false);
+  listener({available:true,pending:false,enteredFromSidebar:false});resolve(false);await Promise.resolve();app.tick();assert.match(app.game.getSnapshot().message,/暂时无法/);assert.ok(app.calls.some(c=>c[0]==='fillText'&&String(c[1]).includes('暂时无法')),'sidebar failure remains visible in tools');assert.equal(app.game.getSnapshot().nextVehicle,0);assert.equal(app.game.getSnapshot().moves,0);
   listener({available:true,pending:false,enteredFromSidebar:true});app.tick();assert.equal(app.game.getSnapshot().sidebar.enteredFromSidebar,true);
   listener({available:true,pending:false,enteredFromSidebar:false});app.tick();assert.equal(app.game.getSnapshot().sidebar.enteredFromSidebar,false);
   app.game.destroy();assert.equal(listener,null);

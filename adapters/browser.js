@@ -8,7 +8,9 @@ export function createBrowserPlatform(canvas, host = window, audioPaths = {}) {
   let size;
   function resize() {
     const rect = canvas.getBoundingClientRect();
-    size = { width: rect.width, height: rect.height, dpr: Math.min(host.devicePixelRatio || 1, 3) };
+    const css=typeof host.getComputedStyle==='function'?host.getComputedStyle(canvas):null;
+    const safeInsets=Object.fromEntries(['top','right','bottom','left'].map(edge=>[edge,Math.max(0,parseFloat(css?.getPropertyValue?.('--safe-'+edge))||0)]));
+    size = { width: rect.width, height: rect.height, dpr: Math.min(host.devicePixelRatio || 1, 3), safeInsets };
     canvas.width = Math.round(size.width * size.dpr);
     canvas.height = Math.round(size.height * size.dpr);
     emit('resize', { ...size });
@@ -37,12 +39,14 @@ export function createBrowserPlatform(canvas, host = window, audioPaths = {}) {
     },
     setMuted(value) { muted = Boolean(value); if (muted) sounds.forEach(sound => sound.pause()); }
   };
+  listen(host,'pagehide',()=>{sounds.forEach(sound=>sound.pause());emit('pause');});
+  listen(host,'pageshow',event=>{if(event.persisted){resize();emit('resume');}});
   listen(host.document, 'visibilitychange', () => {
     if (host.document.hidden) { sounds.forEach(sound => sound.pause()); emit('pause'); }
     else { resize(); emit('resume'); }
   });
   return {
-    canvas, getSize: () => ({ ...size }),
+    canvas, getSize: () => ({ ...size, safeInsets:{...size.safeInsets} }),
     onPointer: subscribe('pointer'), onResize: subscribe('resize'), onPause: subscribe('pause'), onResume: subscribe('resume'),
     requestFrame: fn => host.requestAnimationFrame(fn), cancelFrame: id => host.cancelAnimationFrame(id),
     storage: { getItem: key => host.localStorage.getItem(key), setItem: (key, value) => host.localStorage.setItem(key, value) },
