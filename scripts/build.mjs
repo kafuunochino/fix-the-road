@@ -1,0 +1,50 @@
+import { readFile, mkdir, writeFile, copyFile } from 'node:fs/promises';
+import path from 'node:path';
+import vm from 'node:vm';
+import { fileURLToPath } from 'node:url';
+const root=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+// Deliberately explicit audited module graph, not a general JavaScript bundler.
+const graph={
+  'src/rules.js':[],
+  'src/levels.js':['src/rules.js'],
+  'src/canvas-game.js':['src/levels.js','src/rules.js'],
+  'adapters/browser.js':[],
+  'adapters/tt.js':[]
+};
+const exported=new Map();
+const source=new Map();
+for(const [file,deps] of Object.entries(graph)){
+  let code=await readFile(path.join(root,file),'utf8');const resolved=[];
+  code=code.replace(/^import\s+\{([\w,\s]+)\}\s+from\s+(['"])([^'"]+)\2;\s*$/gm,(whole,names,quote,target)=>{
+    const dependency=path.posix.normalize(path.posix.join(path.posix.dirname(file),target));
+    if(!deps.includes(dependency))throw Error(`Unexpected dependency in ${file}: ${target}`);
+    if(!exported.has(dependency))throw Error(`Dependency order error: ${file} -> ${dependency}`);
+    for(const name of names.split(',').map(n=>n.trim()).filter(Boolean))if(!exported.get(dependency).has(name))throw Error(`Unresolved import ${name} in ${file}`);
+    resolved.push(dependency);return '';
+  });
+  if([...new Set(resolved)].sort().join('|')!==[...deps].sort().join('|'))throw Error(`Import graph mismatch: ${file}`);
+  const names=new Set();
+  code=code.replace(/^export\s+(const|function)\s+(\w+)/gm,(whole,kind,name)=>{names.add(name);return `${kind} ${name}`;});
+  // An unsupported remaining module declaration fails parse; never silently strips it.
+  new vm.Script(code,{filename:file});
+  exported.set(file,names);source.set(file,`// Source: ${file}\n${code}`);
+}
+const core=['src/rules.js','src/levels.js','src/canvas-game.js'];
+const assemble=(files,entry)=>`(function(){\n'use strict';\n${files.map(f=>source.get(f)).join('\n')}\n${entry}\n})();\n`;
+const wav=await readFile(path.join(root,'assets/tap.wav'));
+const audioNames=['turn','switch','send','win','error'];
+const ttAudio=Object.fromEntries(audioNames.map(name=>[name,'assets/tap.wav']));
+const ttEntry=`const platform=createTTPlatform(tt,{requestAnimationFrame,cancelAnimationFrame},${JSON.stringify(ttAudio)});\nstartGame(platform);`;
+const ttCode=assemble([...core,'adapters/tt.js'],ttEntry);new vm.Script(ttCode,{filename:'game.js'});
+const out=path.join(root,'dist/douyin');await mkdir(path.join(out,'assets'),{recursive:true});
+await writeFile(path.join(out,'game.js'),ttCode);
+await writeFile(path.join(out,'game.json'),JSON.stringify({deviceOrientation:'portrait'},null,2)+'\n');
+await writeFile(path.join(out,'project.config.json'),JSON.stringify({description:'修好这条路 Canvas demo. AppID intentionally unset; not platform-validated.',projectname:'fix-the-road',appid:'',setting:{es6:true}},null,2)+'\n');
+await copyFile(path.join(root,'assets/tap.wav'),path.join(out,'assets/tap.wav'));
+const browserAudio=Object.fromEntries(audioNames.map(name=>[name,`data:audio/wav;base64,${wav.toString('base64')}`]));
+const browserEntry=`const platform=createBrowserPlatform(document.getElementById('game'),window,${JSON.stringify(browserAudio)});\nconst game=startGame(platform);\nwindow.roadDemo={getSnapshot:game.getSnapshot};\nwindow.addEventListener('pagehide',event=>{if(!event.persisted){game.destroy();platform.destroy();}});`;
+const browserCode=assemble([...core,'adapters/browser.js'],browserEntry);new vm.Script(browserCode,{filename:'demo.js'});
+if(/<\/script/i.test(browserCode))throw Error('Unexpected script closing sequence in source');
+const html=`<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f7ed"><title>修好这条路 · 离线测试 Demo</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f7ed}canvas{display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>${browserCode}</script></body></html>\n`;
+await mkdir(path.join(root,'deliverables'),{recursive:true});await writeFile(path.join(root,'deliverables/fix-the-road-demo.html'),html);
+console.log('Built dist/douyin (AppID unset, not uploaded) and deliverables/fix-the-road-demo.html (self-contained offline preview).');

@@ -1,41 +1,21 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#eef4e8"><meta name="description" content="转动道路，切换岔口，让面包和鲜花送到家。10 关双车接力解谜。">
-  <title>修好这条路 · 小镇接力</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%237d699d'/%3E%3Cpath d='M50 0V35Q50 50 65 50H100' stroke='%23f7f0dc' stroke-width='30' fill='none'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#f5f7ed">
+  <title>修好这条路 · Canvas 测试版</title>
+  <style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f7ed}canvas{display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="./" aria-label="修好这条路首页"><span class="brand-mark">↱</span><span>修好这条路<small>小镇接力</small></span></a>
-    <div class="header-actions"><span class="beta">BETA 0.1</span><button id="sound" class="icon-button" aria-label="开启音效" title="开启音效">♪<span class="sound-dot"></span></button><button id="help" class="icon-button" aria-label="游戏说明">?</button></div>
-  </header>
-  <main class="layout">
-    <aside class="intro">
-      <div class="eyebrow"><span></span> 一条小路，两份心意</div>
-      <h1>把路转对，<br>让小镇<span>动起来。</span></h1>
-      <p class="intro-copy">早餐要趁热，鲜花要准时。<br>今天的小镇，由你来连接。</p>
-      <div class="town-card"><div class="town-art" aria-hidden="true"><div class="sun"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="tiny-house house1"><i></i></div><div class="tiny-house house2"><i></i></div><div class="tree t1"></div><div class="tree t2"></div><div class="town-road"></div><div class="tiny-car"></div></div><div class="town-caption"><span>慢慢来，路总会接上的。</span><small>无倒计时 · 无广告 · 轻松解谜</small></div></div>
-      <div class="progress-label"><span>小镇建设进度</span><strong id="progress-label">0 / 10</strong></div><div class="progress-track"><div id="progress-fill"></div></div>
-      <div class="instructions-mini"><span>01 <b>转动道路</b></span><span>02 <b>切换岔口</b></span><span>03 <b>送达心意</b></span></div>
-    </aside>
-    <section class="play-area" aria-label="游戏区域">
-      <div class="level-heading"><div><p id="district" class="eyebrow">晨光街</p><h2 id="level-title">第一份早餐</h2></div><button id="choose-level" class="level-select">第 <span id="level-number">01</span> 关 <span>⌄</span></button></div>
-      <div class="mission-card"><div class="mission-icon" id="mission-icon"></div><div class="mission-text"><p id="mission-kicker">这一趟，送一点温暖</p><h3 id="mission-name">把早餐送到面包店</h3></div><div class="delivery-count" id="delivery-count">1 <span>/ 1</span></div></div>
-      <div class="board-frame"><div class="board-corner">N ↑</div><div id="board" class="board" role="group" aria-label="道路棋盘"></div><div id="car-layer" class="car-layer" aria-hidden="true"><div id="car" class="car"></div></div></div>
-      <div class="board-legend"><span><i class="legend-dot yellow"></i> 面包店</span><span><i class="legend-dot purple"></i> 花园</span><span class="move-display">已转动 <strong id="moves">0</strong> 次</span></div>
-      <div class="tip" id="tip" role="status" aria-live="polite">点一下道路，转出一条通往面包店的路。</div>
-      <div class="toolbar"><button id="undo" class="tool-button" aria-label="撤销上一步"><span>↶</span> 撤销</button><button id="reset" class="tool-button"><span>↻</span> 重来</button><button id="preview" class="tool-button" aria-pressed="false"><span>⌁</span> 路线预览</button><button id="hint" class="tool-button"><span>✦</span> 提示</button></div>
-      <button id="dispatch" class="dispatch"><span id="dispatch-label">早餐小车，出发！</span><span class="button-arrow">→</span></button>
-      <p class="game-footer">点击道路旋转 · 橙色岔口切换方向 · 随时可以撤销</p>
-    </section>
-  </main>
-  <footer class="site-footer"><span>让每一份心意，都有路可走。</span><span>原创轻解谜 / 浏览器测试版</span></footer>
-  <dialog id="level-dialog"><div class="dialog-heading"><div><p class="eyebrow">小镇地图</p><h2>下一站，去哪里？</h2></div><button class="close-dialog icon-button" aria-label="关闭选关">×</button></div><p class="dialog-copy">测试版 10 关全部开放。第 5 关起，解锁双车接力。</p><div id="level-grid" class="level-grid"></div><p class="storage-note" id="storage-note">进度只保存在当前浏览器，清除站点数据会重置进度。</p></dialog>
-  <dialog id="help-dialog"><div class="dialog-heading"><div><p class="eyebrow">小镇调度员手册</p><h2>转对路，再出发</h2></div><button class="close-dialog icon-button" aria-label="关闭说明">×</button></div><ol class="help-list"><li><span>1</span><div><b>点击道路，顺时针转 90°</b><p>道路两端要对齐，建筑和绿地不能移动。</p></div></li><li><span>2</span><div><b>预览路线，确认目的地</b><p>黄色车送面包，紫色车送鲜花。虚线显示当前小车能走多远。</p></div></li><li><span>3</span><div><b>双车接力，记得切换岔口</b><p>从第 5 关起，先送一辆，再点击橙色岔口切换方向，最后发另一辆。</p></div></li></ol><div class="help-note">没有倒计时，也没有失败惩罚。撤销可以退回转动或上一次送达。点击“提示”会指出当前路线第一处需要调整的位置。</div><button class="dialog-primary close-dialog">明白了，来修路！</button></dialog>
-  <dialog id="win-dialog"><div class="win-decoration" aria-hidden="true">✦</div><p class="eyebrow">今天的小镇，多了一点美好</p><h2 id="win-title">这一份，顺利送达！</h2><div id="win-stars" class="win-stars">★★★</div><p id="win-summary"></p><p class="win-note" id="win-note"></p><button id="next-level" class="dialog-primary">去下一条街 →</button><button id="replay" class="text-button">再来一次</button><button class="close-dialog icon-button win-close" aria-label="关闭完成窗口">×</button></dialog>
-  <script type="module" src="src/app.js"></script>
+  <canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas>
+  <script type="module">
+    import {createBrowserPlatform} from './adapters/browser.js';
+    import {startGame} from './src/canvas-game.js';
+    const audioPaths=Object.fromEntries(['turn','switch','send','win','error'].map(key=>[key,'./assets/tap.wav']));
+    const platform=createBrowserPlatform(document.getElementById('game'),window,audioPaths);
+    const game=startGame(platform);
+    // Read-only snapshots help repeatable developer QA; no gameplay state setter.
+    window.roadDemo={getSnapshot:game.getSnapshot};
+    window.addEventListener('pagehide',event=>{if(!event.persisted){game.destroy();platform.destroy();}});
+  </script>
 </body>
 </html>
