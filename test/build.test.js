@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { createTTPlatform } from '../adapters/tt.js';
 const root=fileURLToPath(new URL('../',import.meta.url));
@@ -41,6 +42,37 @@ test('single-file preview has no external dependencies and boots through browser
   vm.runInNewContext(source,{window,document},{timeout:1000});host.tick();assert.equal(window.roadDemo.getSnapshot().levelId,1);assert.ok(window.roadDemo.getSnapshot().hitTargets.some(h=>h.id==='dispatch'));
 });
 test('build output is deterministic across repeated builds',()=>{
-  const paths=['dist/douyin/game.js','dist/douyin/game.json','dist/douyin/project.config.json','deliverables/fix-the-road-demo.html'];const previous=paths.map(p=>fs.readFileSync(root+p));
+  const paths=['dist/douyin/game.js','dist/douyin/game.json','dist/douyin/project.config.json','dist/douyin-build-manifest.json','deliverables/fix-the-road-demo.html'];const previous=paths.map(p=>fs.readFileSync(root+p));
   execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root});paths.forEach((p,i)=>assert.deepEqual(fs.readFileSync(root+p),previous[i]));
+});
+
+test('canonical AppID, explicit overrides and candidate manifest stay verifiable',()=>{
+  const config=JSON.parse(fs.readFileSync(root+'config/douyin.json','utf8'));
+  assert.equal(config.appid,'tt0b947d2995edc0c502');
+  try{
+    for(const appid of ['', 'tt12345678test']){
+      execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root,env:{...process.env,DOUYIN_APP_ID:appid}});
+      assert.equal(JSON.parse(fs.readFileSync(root+'dist/douyin/project.config.json','utf8')).appid,appid);
+      assert.equal(JSON.parse(fs.readFileSync(root+'dist/douyin-build-manifest.json','utf8')).appid,appid);
+    }
+    assert.throws(()=>execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root,env:{...process.env,DOUYIN_APP_ID:'not-an-app-id'},stdio:'pipe'}));
+  }finally{
+    const env={...process.env};delete env.DOUYIN_APP_ID;execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root,env});
+  }
+  const manifest=JSON.parse(fs.readFileSync(root+'dist/douyin-build-manifest.json','utf8'));
+  assert.equal(manifest.appid,config.appid);assert.equal(manifest.projectname,'修好这条路');assert.equal(manifest.version,config.version);
+  for(const [file,sha] of Object.entries(manifest.files))assert.equal(createHash('sha256').update(fs.readFileSync(root+'dist/douyin/'+file)).digest('hex'),sha);
+});
+
+test('built tt candidate navigates only from a supported canvas sidebar tap and tracks latest return',async()=>{
+  const host=makeHost(),navigations=[];
+  host.api.checkScene=options=>{assert.equal(options.scene,'sidebar');options.success({isExist:true});};
+  host.api.navigateToScene=options=>navigations.push(options);
+  vm.runInNewContext(fs.readFileSync(root+'dist/douyin/game.js','utf8'),{tt:host.api,...host.scheduler},{timeout:1000});host.tick();
+  assert.equal(navigations.length,0);assert.ok(host.calls.some(c=>c[0]==='fillText'&&c[1]==='侧边栏 ↗'));
+  const tap=()=>{host.emit('TouchStart',{changedTouches:[{identifier:1,clientX:250,clientY:36}]});host.emit('TouchEnd',{changedTouches:[{identifier:1,clientX:250,clientY:36}]});};
+  tap();host.tick();tap();assert.equal(navigations.length,1);assert.equal(navigations[0].scene,'sidebar');
+  navigations[0].success({});await Promise.resolve();host.tick();assert.equal(host.data.size,0,'sidebar callback grants no progress or reward');
+  host.calls.length=0;host.emit('Show',{launch_from:'homepage',location:'sidebar_card'});host.tick();assert.ok(host.calls.some(c=>c[0]==='fillText'&&String(c[1]).startsWith('欢迎从侧边栏回来')));
+  host.calls.length=0;host.emit('Show',{});host.tick();assert.equal(host.calls.some(c=>c[0]==='fillText'&&String(c[1]).startsWith('欢迎从侧边栏回来')),false);
 });

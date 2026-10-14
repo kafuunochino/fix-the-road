@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import { startGame } from '../src/canvas-game.js';
 import { LEVELS } from '../src/levels.js';
 
-function makePlatform({levelId=1, storageThrows=false}={}) {
+function makePlatform({levelId=1, storageThrows=false, sidebar}={}) {
   const handlers={pointer:new Set(),resize:new Set(),pause:new Set(),resume:new Set()},frames=new Map();let id=0,time=0,size={width:400,height:800,dpr:2};
   const data=new Map([['fix-the-road-v1',JSON.stringify({version:1,lastLevel:levelId,completed:[],bestMoves:{},sound:false})]]);
   const calls=[];
   const context=new Proxy({measureText:text=>({width:String(text).length*6})},{get:(obj,key)=>key in obj?obj[key]:(...args)=>calls.push([key,...args]),set:(obj,key,value)=>{obj[key]=value;return true;}});
   const on=name=>fn=>{handlers[name].add(fn);return()=>handlers[name].delete(fn);};
   const platform={canvas:{getContext:()=>context},getSize:()=>size,onPointer:on('pointer'),onResize:on('resize'),onPause:on('pause'),onResume:on('resume'),requestFrame:fn=>{frames.set(++id,fn);return id;},cancelFrame:id=>frames.delete(id),storage:{getItem:key=>{if(storageThrows)throw Error('denied');return data.get(key)||null;},setItem:(key,value)=>{if(storageThrows)throw Error('denied');data.set(key,value);}},audio:{play:()=>{},setMuted:()=>{}}};
+  if(sidebar)platform.sidebar=sidebar;
   const game=startGame(platform);
   const tick=(dt=16)=>{time+=dt;const current=[...frames.entries()];frames.clear();current.forEach(([,fn])=>fn(time));};tick();
   const emit=(name,value)=>handlers[name].forEach(fn=>fn(value));
@@ -83,4 +84,16 @@ test('dragging away and back does not turn a road',()=>{
   const app=makePlatform();const tile=app.game.getSnapshot().hitTargets.find(h=>h.id.startsWith('tile-')),x=tile.x+tile.w/2,y=tile.y+tile.h/2;
   app.emit('pointer',{type:'down',x,y,id:1});app.emit('pointer',{type:'move',x:x+25,y,id:1});app.emit('pointer',{type:'move',x,y,id:1});app.emit('pointer',{type:'up',x,y,id:1});app.tick();
   assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
+});
+
+test('Canvas sidebar is hidden when unsupported and requires an explicit supported tap',async()=>{
+  const unsupported=makePlatform({sidebar:{getState:()=>({available:false,pending:false}),subscribe:()=>()=>{},navigate:()=>{throw Error('must not navigate');}}});
+  assert.equal(unsupported.game.getSnapshot().hitTargets.some(h=>h.id==='sidebar'),false);unsupported.game.destroy();
+  let calls=0,listener,resolve;
+  const sidebar={getState:()=>({available:true,pending:false,enteredFromSidebar:false}),subscribe:fn=>{listener=fn;return()=>{listener=null;};},navigate:()=>{calls++;listener({available:true,pending:true,enteredFromSidebar:false});return new Promise(r=>resolve=r);}};
+  const app=makePlatform({sidebar});assert.equal(calls,0);app.tap('sidebar');assert.equal(calls,1);assert.equal(app.game.getSnapshot().hitTargets.some(h=>h.id==='sidebar'),false);
+  listener({available:true,pending:false,enteredFromSidebar:false});resolve(false);await Promise.resolve();app.tick();assert.match(app.game.getSnapshot().message,/暂时无法/);assert.equal(app.game.getSnapshot().nextVehicle,0);assert.equal(app.game.getSnapshot().moves,0);
+  listener({available:true,pending:false,enteredFromSidebar:true});app.tick();assert.equal(app.game.getSnapshot().sidebar.enteredFromSidebar,true);
+  listener({available:true,pending:false,enteredFromSidebar:false});app.tick();assert.equal(app.game.getSnapshot().sidebar.enteredFromSidebar,false);
+  app.game.destroy();assert.equal(listener,null);
 });

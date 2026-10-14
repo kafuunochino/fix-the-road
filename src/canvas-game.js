@@ -12,6 +12,7 @@ export function startGame(platform) {
   let level=LEVELS.find(l=>l.id===progress.lastLevel)||LEVELS[0], state=createState(level);
   let preview=false, modal=null, message='', hint=-1, hits=[], animation=null, frameId=null, previousTime=null, paused=false, destroyed=false;
   let transform={scale:1,x:0,y:0}, gesture=null;
+  let sidebarState=platform.sidebar?.getState?.()||null;
   platform.audio.setMuted(!progress.sound);
   const currentVehicle=()=>level.vehicles[state.nextVehicle];
   function save(){try{platform.storage.setItem(KEY,JSON.stringify(progress));storageOK=true;}catch{storageOK=false;}}
@@ -32,6 +33,13 @@ export function startGame(platform) {
   }
   function schedule(){if(!destroyed&&!paused&&frameId===null)frameId=platform.requestFrame(drawFrame);}
   function notify(value){message=value;schedule();}
+  async function openSidebar(){
+    if(!platform.sidebar||!sidebarState?.available||sidebarState.pending)return;
+    try{
+      const opened=await platform.sidebar.navigate();
+      if(!destroyed&&!opened)notify('暂时无法打开侧边栏，请稍后再试。');
+    }catch{if(!destroyed)notify('暂时无法打开侧边栏，请稍后再试。');}
+  }
   function load(id){level=LEVELS.find(l=>l.id===id)||LEVELS[0];state=createState(level);animation=null;previousTime=null;preview=false;modal=null;message='';hint=-1;progress.lastLevel=level.id;save();schedule();}
   function routeMessage(result){
     if(result.ok)return '路线接通了！这辆车可以放心出发。';
@@ -113,6 +121,7 @@ export function startGame(platform) {
   }
   function drawMain(){
     text('↱',25,35,30,colors.purple,'left','700');text('修好这条路',62,34,20,colors.ink,'left','700');text('小镇接力 / DEMO',62,55,9,colors.muted);
+    if(sidebarState?.available)button('sidebar',sidebarState.pending?'打开中…':'侧边栏 ↗',204,21,92,30,openSidebar,{disabled:sidebarState.pending,size:10});
     button('sound',progress.sound?'♪':'静',306,21,30,30,()=>{progress.sound=!progress.sound;platform.audio.setMuted(!progress.sound);save();sound('turn');schedule();},{size:13});button('help','?',346,21,30,30,()=>{modal='help';schedule();});
     text(level.district,24,89,10,colors.muted);text(level.title,24,111,20,colors.ink,'left','700');button('levels',`第 ${String(level.id).padStart(2,'0')} 关`,300,82,76,32,()=>{modal='levels';schedule();},{size:10});
     const vehicle=currentVehicle()||level.vehicles.at(-1),complete=isComplete(state,level);
@@ -124,7 +133,7 @@ export function startGame(platform) {
     button('preview','路线预览',194,657,97,37,()=>{preview=!preview;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';schedule();},{disabled:!!animation||complete,fill:preview?'#e8dfef':'#fafbf4',color:preview?colors.purple:colors.muted});
     button('hint','✦ 提示',299,657,77,37,showHint,{disabled:!!animation||complete});
     round(24,711,352,49,13,'#6d5b84');button('dispatch',animation?'小车正在路上…':complete?'看看这一关的成绩':`${vehicle.name}，出发！  →`,24,707,352,49,send,{fill:colors.purple,color:'#fffdf6',size:14,disabled:!!animation});
-    text('点击道路旋转 · 橙色岔口切换方向 · 随时可撤销',200,779,9,'#a2ad97','center');
+    text(sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来 · 继续修好小镇的路':'点击道路旋转 · 橙色岔口切换方向 · 随时可撤销',200,779,9,'#a2ad97','center');
   }
   function drawModal(){
     // Discard underlying hit targets: modal input cannot leak to the board.
@@ -170,6 +179,7 @@ export function startGame(platform) {
     // Never reuse a rendered closure after a synchronous state transition.
     hits=[];hit.fn();schedule();
   }),platform.onResize(()=>{gesture=null;schedule();}),platform.onPause(()=>{paused=true;gesture=null;previousTime=null;if(frameId!==null){platform.cancelFrame(frameId);frameId=null;}}),platform.onResume(()=>{paused=false;previousTime=null;schedule();})];
+  if(typeof platform.sidebar?.subscribe==='function')unsubscribers.push(platform.sidebar.subscribe(value=>{sidebarState=value;schedule();}));
   schedule();
-  return {destroy(){destroyed=true;animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform}};}};
+  return {destroy(){destroyed=true;animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,sidebar:sidebarState?{...sidebarState}:null,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform}};}};
 }

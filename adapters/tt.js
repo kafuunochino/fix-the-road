@@ -1,5 +1,7 @@
+import { createDouyinSidebar } from './douyin-sidebar.js';
 // No browser globals. tt and the frame scheduler are explicitly injected.
 export function createTTPlatform(api, scheduler, audioPaths = {}) {
+  const sidebar = createDouyinSidebar(api); // Register newest onShow before game boot.
   const canvas = api.createCanvas(); // Exactly one on-screen canvas.
   const listeners = { pointer: new Set(), resize: new Set(), pause: new Set(), resume: new Set() };
   const removers = [];
@@ -31,7 +33,7 @@ export function createTTPlatform(api, scheduler, audioPaths = {}) {
   bind('onShow', 'offShow', () => { resize(); emit('resume'); });
   // The spike is portrait-only. Verify host resize behavior before landscape/tablet support.
   return {
-    canvas, getSize: () => ({ ...size }),
+    canvas, sidebar, getSize: () => ({ ...size }),
     onPointer: subscribe('pointer'), onResize: subscribe('resize'), onPause: subscribe('pause'), onResume: subscribe('resume'),
     requestFrame: fn => scheduler.requestAnimationFrame(fn), cancelFrame: id => scheduler.cancelAnimationFrame(id),
     storage: {
@@ -49,6 +51,6 @@ export function createTTPlatform(api, scheduler, audioPaths = {}) {
       },
       setMuted(value) { muted = Boolean(value); if (muted) stopAudio(); }
     },
-    destroy() { removers.forEach(fn => fn()); sounds.forEach(sound => sound.destroy()); Object.values(listeners).forEach(set => set.clear()); }
+    destroy() { sidebar.destroy(); removers.forEach(fn => fn()); sounds.forEach(sound => sound.destroy()); Object.values(listeners).forEach(set => set.clear()); }
   };
 }
