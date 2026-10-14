@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "asset": "icon-source-v1.png",
+  "createdAt": "2026-10-14",
+  "generator": "OpenAI built-in image_gen tool",
+  "mode": "built_in_generation",
+  "prompt": "Use case: stylized-concept. Asset type: original square mobile puzzle game listing icon for 修好这条路. Deliver a PNG exactly 600 pixels wide and 600 pixels high if supported. Scene/backdrop: small original toy-town road puzzle shown in a gentle top-down three-quarter view, full-bleed pale cream-green background. Subject: one clear chunky bend-and-junction road tile arrangement with a visible orange central switching junction and two distinct tiny delivery vans, one warm yellow carrying a loaf of bread and one soft purple carrying a bouquet of flowers. Visual focus is on the shared road switch; no construction worker or excavation imagery. Style: tactile cut-paper / soft matte miniatures, simplified crisp original illustrated geometry, subtle shallow shadows. Match existing game colors cream #f5f7ed, sage #799361, ink #44513e, warm yellow #eeb64d, purple #816c98. Small number of large readable objects, road and vans centered with breathing room. Constraints: 600x600 square PNG, under 6MB, opaque full-bleed background to every square corner, no rounded outer corners, no border, no text or letters, no logos, no trademarked characters, no watermark, no QR codes, no UI overlays. Entirely original artwork, not a screenshot or a reproduction of any existing game icon.",
+  "sourceArtwork": "橙色共享岔口与几何道路，黄色面包车和紫色鲜花车，淡绿小镇纸艺风格。",
+  "sourceAssets": "未输入第三方参考图片；未下载或购买素材。按本项目描述原创生成。",
+  "targetUse": "游戏展示图标草案，不是实机截图。",
+  "humanInspection": {
+    "performed": true,
+    "visualOnly": true,
+    "notes": "画面与核心玩法主题一致；未观察到文字、水印、二维码、品牌标识或外框圆角。未进行商标相似性检索。"
+  },
+  "exact600Export": {
+    "requested": true,
+    "met": false,
+    "actualWidth": 1254,
+    "actualHeight": 1254,
+    "reason": "内置生成工具输出1254×1254，未按提示输出600×600。保留原画，不把源图标为可上传版本。",
+    "nextStep": "在实际资料提交前完成获准的精确尺寸导出并重新检查。"
+  },
+  "modifications": "仅复制原始生成PNG到项目listing目录，未缩放、裁切、重绘或改动运行时与冻结候选。"
+}

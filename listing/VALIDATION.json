@@ -1,0 +1,34 @@
+{
+  "validatedAtUTC": "2026-10-14T11:13:06.762126+00:00",
+  "status": "draft_ready_icon_exact_dimensions_pending",
+  "name": "修好这条路",
+  "text": {
+    "introductionCharacters": 27,
+    "introductionHanCharacters": 24,
+    "introductionMaximum": 60,
+    "introductionPass": true,
+    "detailedDescriptionCharacters": 196,
+    "detailedDescriptionHanCharacters": 177,
+    "detailedDescriptionMinimum": 120,
+    "detailedDescriptionMaximum": 300,
+    "detailedDescriptionPass": true,
+    "detailedDescriptionHanCountAlsoPass": true
+  },
+  "icon": {
+    "file": "assets/icon-source-v1.png",
+    "format": "PNG",
+    "width": 1254,
+    "height": 1254,
+    "bytes": 2221097,
+    "sha256": "b8f84cdf77d233c8e255cadc75698fb6a6d03dc05c3871dab855f118e8ff8ccc",
+    "square": true,
+    "under6MB": true,
+    "exact600By600": false,
+    "visuallyInspected": true,
+    "visuallyObservedNoOuterRoundedCorners": true,
+    "visuallyObservedNoWatermarkTextOrQRCode": true,
+    "submissionReady": false
+  },
+  "platformSubmitted": false,
+  "runtimeOrFrozenCandidateModifiedByThisTask": false
+}

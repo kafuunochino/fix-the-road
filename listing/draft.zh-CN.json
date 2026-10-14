@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "status": "draft_not_submitted",
+  "preparedAt": "2026-10-14",
+  "language": "zh-CN",
+  "name": "修好这条路",
+  "recommendedCategory": {
+    "primary": "休闲益智",
+    "secondary": "解谜",
+    "status": "recommendation_only",
+    "basis": "当前控制台已观察到的分类选项；尚未填写或提交。"
+  },
+  "introduction": "转动道路接通小镇，切换共享岔口，让两辆送货车接力抵达。",
+  "detailedDescription": "转动一块块道路，让断开的路线重新相连。十个手工关卡从简单接路开始，逐步加入共享岔口与双车接力。黄色小车把面包送往面包店，紫色小车把鲜花送往花园；第五关起，需要在第一辆车送达后切换岔口，再让第二辆车出发。可以预览路线、查看提示，或撤销操作后重新尝试。没有倒计时，也没有体力限制。当前为单人试玩版本，通关记录和最佳步数只保存在当前设备，不含广告、云存档或运行时人工智能，清理本地数据可能丢失进度。",
+  "lengthLimits": {
+    "introductionMaximumCharacters": 60,
+    "detailedDescriptionMinimumCharacters": 120,
+    "detailedDescriptionMaximumCharacters": 300
+  },
+  "currentScope": {
+    "singlePlayer": true,
+    "localSaveOnly": true,
+    "ads": false,
+    "cloudSave": false,
+    "runtimeAI": false
+  },
+  "icon": {
+    "sourceFile": "assets/icon-source-v1.png",
+    "kind": "original_generated_concept_art_not_gameplay_screenshot",
+    "target": {
+      "format": "PNG",
+      "width": 600,
+      "height": 600,
+      "maxBytes": 6000000,
+      "squareCorners": true
+    },
+    "status": "source_art_ready_exact_size_pending",
+    "submissionReady": false
+  },
+  "evidenceFiles": [
+    "../README.md",
+    "../src/levels.js",
+    "../src/rules.js",
+    "../src/canvas-game.js"
+  ],
+  "submission": {
+    "submitted": false,
+    "platformFieldsEdited": false,
+    "reviewClaim": false,
+    "certificationClaim": false,
+    "softwareCopyrightClaim": false,
+    "requiresReviewBeforeSubmission": true
+  }
+}
