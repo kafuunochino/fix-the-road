@@ -1,5 +1,5 @@
 import { LEVELS, CHAPTERS } from './levels.js';
-import { createState, traceRoute, turnTile, dispatch, undo, ports, isEditable, isComplete, starsFor, normalizeProgress, movePanel, reviveState, useWorkTool, awardVictory, spendCoins } from './rules.js';
+import { createState, traceRoute, turnTile, dispatch, undo, ports, isEditable, isComplete, starsFor, normalizeProgress, movePanel, reviveState, useWorkTool, awardVictory, reserveRunPurchase, refundPendingPurchase, pendingPurchaseAmount } from './rules.js';
 
 // This module is platform-independent: no window, document, CSS, network or SDK globals.
 export function startGame(platform) {
@@ -8,13 +8,16 @@ export function startGame(platform) {
   const KEY='fix-the-road-v1';
   const colors={paper:'#202932',ink:'#edf4ed',muted:'#9db7c4',purple:'#d3a1ff',green:'#67e5cb',yellow:'#ffca51'};
   const fontStack='"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif';
-  let saved, storageOK=true;
-  try { saved=JSON.parse(platform.storage.getItem(KEY)); } catch { saved=null; storageOK=false; }
+  let saved,lastStoredRaw,storageOK=true,storageConflict=false,storageUncertain=false;
+  try { lastStoredRaw=platform.storage.getItem(KEY);saved=JSON.parse(lastStoredRaw); } catch { saved=null;storageOK=false; }
   let progress=normalizeProgress(saved,LEVELS.map(l=>l.id));
+  const startupRefund=pendingPurchaseAmount(progress);
+  if(startupRefund){progress=refundPendingPurchase(progress);persist(progress);} // One atomic reconciliation, not a new reward.
   let level=LEVELS.find(l=>l.id===progress.lastLevel)||LEVELS[0], state=createState(level);
-  let preview=false, modal=null, message='', hint=-1, hits=[], animation=null, frameId=null, previousTime=null, paused=false, destroyed=false;
+  let preview=false, modal=null, message=startupRefund?(storageOK?`上一局未完成，已退回${startupRefund}金币。`:`上局${startupRefund}金币已恢复，退款待保存。`):'', hint=-1, hits=[], animation=null, frameId=null, previousTime=null, paused=false, destroyed=false;
   let transform={scale:1,x:0,y:0}, gesture=null;
   let crane=false,selectedPanel=-1,mapPage=Math.floor((level.id-1)/10),runId=1,adPending=false,lastRewardId=null,winAward=0;
+  let purchaseToken=`run_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,10)}`;
   const rewardService=platform.rewards;
   function failIfNeeded(){if(state.failed){modal='failed';crane=false;selectedPanel=-1;}schedule();}
   function cancelReward(){runId++;adPending=false;rewardService?.cancel?.();}
@@ -28,12 +31,34 @@ export function startGame(platform) {
     else{modal='failed';message=result.status==='cancelled'?'未完成观看，没有发放奖励。':result.status==='unavailable'?'暂无可用广告，没有发放奖励。':'广告异常，没有发放奖励。';}
     previousTime=null;schedule();
   }
-  function coinRevive(){if(!state.failed||state.revived)return;const paid=spendCoins(progress,20);if(!paid){message='金币不足，仍可免费重开。';schedule();return;}progress=paid;state=reviveState(state);save();modal=null;message='使用20金币复工：+10工时，恢复容错；本局限一次。';schedule();}
-  function buyWork(){if(state.failed||state.toolUsed||state.budget===null||isComplete(state,level)||animation||adPending)return;const paid=spendCoins(progress,12);if(!paid){message='金币不足12；通关首次获得20金币。';schedule();return;}progress=paid;state=useWorkTool(state);save();message='已使用加班券：+6工时，本局限购一次。';schedule();}
+  function payFor(kind){
+    const paid=reserveRunPurchase(progress,purchaseToken,level.id,kind);
+    if(!paid){message='金币不足；仍可免费重开。';schedule();return false;}
+    // Never grant the temporary benefit unless its debit + receipt are durable.
+    if(!persist(paid)){message=storageConflict?'存档在其他页面更新，请刷新；本次未扣金币。':storageUncertain?'保存结果未确认，未给道具；重开页面核对退款。':'无法保存，本次未扣金币；仍可免费重开。';schedule();return false;}
+    progress=paid;return true;
+  }
+  function coinRevive(){if(!state.failed||state.revived||adPending)return;if(!payFor('revive'))return;state=reviveState(state);modal=null;message='预留20金币复工：+10工时；未通关重开/退出退回。';schedule();}
+  function buyWork(){if(state.failed||state.toolUsed||state.budget===null||isComplete(state,level)||animation||adPending)return;if(!payFor('workTool'))return;state=useWorkTool(state);message='预留12金币：+6工时；未通关重开/退出退回。';schedule();}
   let sidebarState=platform.sidebar?.getState?.()||null;
   platform.audio.setMuted(!progress.sound);
   const currentVehicle=()=>level.vehicles[state.nextVehicle];
-  function save(){try{platform.storage.setItem(KEY,JSON.stringify(progress));storageOK=true;}catch{storageOK=false;}}
+  function persist(value){
+    const raw=JSON.stringify(value);let attempted=false;
+    try{
+      const current=platform.storage.getItem(KEY);
+      // An older tab must not overwrite a newer refund or settlement.
+      if(current!==(lastStoredRaw===undefined?null:lastStoredRaw)){storageOK=false;storageConflict=true;storageUncertain=false;return false;}
+      attempted=true;platform.storage.setItem(KEY,raw);
+      if(platform.storage.getItem(KEY)!==raw){storageOK=false;storageUncertain=true;return false;}
+      lastStoredRaw=raw;storageOK=true;storageConflict=false;storageUncertain=false;return true;
+    }catch{
+      // A write-then-throw host is committed only after exact receipt readback.
+      try{const observed=platform.storage.getItem(KEY);if(observed===raw){lastStoredRaw=raw;storageOK=true;storageConflict=false;storageUncertain=false;return true;}storageUncertain=attempted&&observed!==lastStoredRaw;}catch{storageUncertain=attempted;}
+      storageOK=false;return false;
+    }
+  }
+  function save(){return persist(progress);}
   function sound(name){if(progress.sound){try{platform.audio.play(name);}catch{}}}
   function round(x,y,w,h,r,fill,stroke){
     r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}
@@ -60,7 +85,7 @@ export function startGame(platform) {
       if(!destroyed&&!opened)notify('暂时无法打开侧边栏，请稍后再试。');
     }catch{if(!destroyed)notify('暂时无法打开侧边栏，请稍后再试。');}
   }
-  function load(id){cancelReward();crane=false;selectedPanel=-1;winAward=0;level=LEVELS.find(l=>l.id===id)||LEVELS[0];state=createState(level);animation=null;previousTime=null;preview=false;modal=null;message='';hint=-1;mapPage=Math.floor((level.id-1)/10);progress.lastLevel=level.id;save();schedule();}
+  function load(id){const refund=pendingPurchaseAmount(progress);progress=refundPendingPurchase(progress);cancelReward();purchaseToken=`run_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,10)}_${runId}`;crane=false;selectedPanel=-1;winAward=0;level=LEVELS.find(l=>l.id===id)||LEVELS[0];state=createState(level);animation=null;previousTime=null;preview=false;modal=null;message=refund?`未完成局已退回${refund}金币。`:'';hint=-1;mapPage=Math.floor((level.id-1)/10);progress.lastLevel=level.id;save();schedule();}
   function routeMessage(result){
     if(result.ok)return '路线接通了！这辆车可以放心出发。';
     if(result.reason==='wrong_destination')return '送错目的地啦！点橙色岔口换个方向。';
@@ -221,16 +246,16 @@ export function startGame(platform) {
   }
   function drawModal(){
     if(modal==='tools'){
-      modalHeader('施工工具箱',message||'所有设置与帮助，都在游戏内。','close-tools');
+      modalHeader('施工工具箱',message&&/未扣|未确认|侧边栏|不足/.test(message)?message:'费用预留，未通关退出自动退回。','close-tools');
       const gap=10,bw=(W-34)/2,bh=54,y=100,complete=isComplete(state,level);
       button('hint','定位断点',12,y,bw,bh,()=>{modal=null;showHint();},{disabled:!!animation||complete,color:colors.purple,size:16});
       button('reset','重开本段',22+bw,y,bw,bh,()=>load(level.id),{disabled:!!animation,size:16});
       button('sound',progress.sound?'声音：开':'声音：关',12,y+64,bw,bh,()=>{progress.sound=!progress.sound;platform.audio.setMuted(!progress.sound);save();sound('turn');schedule();},{size:16});
       button('help','施工手册',22+bw,y+64,bw,bh,()=>{modal='help';schedule();},{size:16});
       if(sidebarState?.available)button('sidebar',sidebarState.pending?'侧边栏打开中…':'侧边栏 ↗',12,y+192,W-24,52,openSidebar,{disabled:sidebarState.pending,size:14});
-      button('work-tool',state.toolUsed?'加班券已用':'+6工时 · 12金币',12,y+128,W-24,52,buyWork,{disabled:!!animation||state.budget===null||state.toolUsed||!!state.failed||complete,size:14});
+      button('work-tool',state.toolUsed?'加班券已用':'+6工时 · 预留12币',12,y+128,W-24,52,buyWork,{disabled:!!animation||state.budget===null||state.toolUsed||!!state.failed||complete,size:14});
       const noteY=y+(sidebarState?.available?252:192);
-      if(!sidebarState?.available||H>510)wrap(sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，进度没有变化。':message?message:storageOK?`金币 ${progress.coins} · 首次通关+20。仅用于限定道具/复活，无充值。`:'本机存储暂时不可用，仍可继续玩。',16,noteY,W-32,12,20,colors.muted,sidebarState?.available?2:3);
+      if(!sidebarState?.available||H>510)wrap(sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，进度没有变化。':message?message:storageOK?`金币 ${progress.coins} · 未通关退出退回预留费。`:'本机存储暂时不可用，仍可继续玩。',16,noteY,W-32,12,20,colors.muted,sidebarState?.available?2:3);
       button('continue','继续修路  →',12,H-68,W-24,52,()=>{modal=null;schedule();},{fill:colors.yellow,color:'#102b3c',size:16});
     }else if(modal==='levels'){
       modalHeader('城市复线',`50 个工段 · ${CHAPTERS[mapPage]} · 已完成 ${progress.completed.length}/50`);
@@ -252,8 +277,9 @@ export function startGame(platform) {
       const y=H<500?98:118;stripe(16,y,W-32,10);text(state.failed==='incidents'?'紧急制动 · 道路封控':'工时耗尽 · 重新规划',W/2,y+38,21,'#f59e71','center','700');
       wrap(message||'本段初始状态可解。免费重开可重新规划，不需要看广告。',18,y+72,W-36,12,20,colors.muted,2);
       const yy=Math.min(y+126,H-234);
-      button('coin-revive',state.revived?'本局复活已使用':'20金币复活 · +10工时',12,yy,W-24,48,coinRevive,{disabled:state.revived||adPending,size:14});
+      button('coin-revive',state.revived?'本局复活已使用':'预留20币复活 · +10工时',12,yy,W-24,48,coinRevive,{disabled:state.revived||adPending,size:14});
       const rs=rewardService?.getState?.();button('ad-revive',rs?.mode==='mock'?'模拟广告复活（测试）':'广告复活（预留未启用）',12,yy+58,W-24,48,requestRevive,{disabled:state.revived||adPending,size:14});
+      text('未通关重开/退出，预留金币自动退回。',W/2,H-92,11,colors.muted,'center');
       button('free-restart','免费重开本段',12,H-68,W-24,52,()=>load(level.id),{fill:colors.yellow,color:'#172a35',size:17});
     }else if(modal==='mock-ad'||modal==='ad-wait'){
       modalHeader(modal==='mock-ad'?'模拟广告测试':'等待广告结果','本页不是真实广告，不产生收入。','close-ad');
@@ -266,7 +292,7 @@ export function startGame(platform) {
       }
       button('ad-restart','不等广告，免费重开',12,H-58,W-24,46,()=>load(level.id),{size:14});
     }else if(modal==='win'){
-      modalHeader('工段验收通过',progress.completed.length===LEVELS.length?'整座路网已经恢复畅通。':`施工段 ${String(level.id).padStart(2,'0')} · ${level.title}`,'close-win');
+      modalHeader('工段验收通过',!storageOK?'保存未成功，重开将退回预留费。':progress.completed.length===LEVELS.length?'整座路网已经恢复畅通。':`施工段 ${String(level.id).padStart(2,'0')} · ${level.title}`,'close-win');
       const cy=Math.max(120,Math.min(H*.4,H-292,240));
       stripe(30,cy-40,W-60,10);text('★'.repeat(starsFor(state.moves,level.par)),W/2,cy+12,45,colors.yellow,'center','700');text('运输任务完成',W/2,cy+64,24,colors.ink,'center','700');text(`${state.moves} 次转动  /  ${level.vehicles.length} 辆车送达`,W/2,cy+102,14,colors.green,'center');text(`三星目标：${level.par} 次以内 / ${winAward?'+20金币':'本段金币已领'}`,W/2,cy+128,12,colors.muted,'center');
       button('next',level.id===LEVELS.length?'查看完整路网  →':'进入下一工段  →',12,H-132,W-24,52,()=>{if(level.id===LEVELS.length){modal='levels';schedule();}else load(level.id+1);},{fill:colors.yellow,color:'#102b3c',size:16});
@@ -308,5 +334,5 @@ export function startGame(platform) {
   }),platform.onResize(()=>{gesture=null;hits=[];schedule();}),platform.onPause(()=>{paused=true;gesture=null;previousTime=null;if(frameId!==null){platform.cancelFrame(frameId);frameId=null;}}),platform.onResume(()=>{paused=false;previousTime=null;schedule();})];
   if(typeof platform.sidebar?.subscribe==='function')unsubscribers.push(platform.sidebar.subscribe(value=>{sidebarState=value;schedule();}));
   schedule();
-  return {destroy(){destroyed=true;cancelReward();rewardService?.destroy?.();animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,sidebar:sidebarState?{...sidebarState}:null,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform},layout:{...layout,safeInsets:{...layout.safeInsets}},design:'road-city-reconnect-v4',campaignSize:LEVELS.length,crane,selectedPanel,coins:progress.coins,workSpent:state.workSpent,budget:state.budget,incidents:state.incidents,incidentLimit:state.incidentLimit,failed:state.failed,revived:state.revived,toolUsed:state.toolUsed,rewards:rewardService?.getState?.()||{mode:'disabled'},adPending,runId};}};
+  return {destroy(){if(destroyed)return;if(pendingPurchaseAmount(progress)){progress=refundPendingPurchase(progress);save();}destroyed=true;cancelReward();rewardService?.destroy?.();animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,storageConflict,storageUncertain,pendingPurchase:progress.pendingPurchase?{...progress.pendingPurchase}:null,pendingPurchaseCoins:pendingPurchaseAmount(progress),sidebar:sidebarState?{...sidebarState}:null,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform},layout:{...layout,safeInsets:{...layout.safeInsets}},design:'road-city-reconnect-v4',campaignSize:LEVELS.length,crane,selectedPanel,coins:progress.coins,workSpent:state.workSpent,budget:state.budget,incidents:state.incidents,incidentLimit:state.incidentLimit,failed:state.failed,revived:state.revived,toolUsed:state.toolUsed,rewards:rewardService?.getState?.()||{mode:'disabled'},adPending,runId};}};
 }

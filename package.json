@@ -1,6 +1,6 @@
 {
   "name": "fix-the-road",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "type": "module",
   "description": "城市复线：50关道路调度与模块化施工离线Demo",

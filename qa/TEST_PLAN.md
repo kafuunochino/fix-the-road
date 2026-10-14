@@ -104,3 +104,8 @@
 - Reward SDK adapter: default disabled, no real ad IDs. Test four explicit mock results, busy rejection, close validation, duplicate/stale callback, count-only share rejection, rejected/throwing show, timeout, cancellation, cleanup-await and failed cleanup. Restart/background/destroy must not leave locked gameplay or late rewards.
 - Native Canvas approximate screenshots reviewed with registered Noto CJK: 390x844 and320x480 main, crane, brake animation, failure, mock-ad choices, revived play, all chapter tabs, result and tool shop. These are not browser/phone screenshots.
 - Not completed: independent current-version reviewer, real browser audio/pixels, touchscreen/device UI, official Douyin tools or real SDK callbacks. Real ads and public upload remain disabled/out of scope.
+
+
+## 0.3.1 purchase recovery regressions
+
+Retain all198 prior checks; add20 receipt/refund regressions. Exact HTML with actual adapter/localStorage map: tool/revive/both reload, repeated refund, free restart, other-level selection, permanent leave, failure preservation, bfcache effect preservation, win settlement, repeated clear, write-before/after/uncertain failures, refund/settlement persistence failure, boot-time failure, multi-click and stale-tab overwrite rejection. Re-run all50 solutions at8 viewports after the patch. No browser/device execution claim.

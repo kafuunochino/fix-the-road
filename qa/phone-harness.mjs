@@ -6,13 +6,13 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
-export function createPhoneHarness({width=320,height=568,safeInsets={top:24,right:0,bottom:16,left:0},initial=null,storageThrows=false,canvas:realCanvas=null}={}){
+export function createPhoneHarness({width=320,height=568,safeInsets={top:24,right:0,bottom:16,left:0},initial=null,storageThrows=false,storageWriteThrows=false,storageMap=null,canvas:realCanvas=null}={}){
  const events=()=>{const listeners=new Map();return {addEventListener(n,f){if(!listeners.has(n))listeners.set(n,new Set());listeners.get(n).add(f);},removeEventListener(n,f){listeners.get(n)?.delete(f);},emit(n,e={}){for(const fn of [...(listeners.get(n)||[])])fn(e);},count:()=>[...listeners.values()].reduce((n,s)=>n+s.size,0)};};
- const frames=new Map(),store=new Map(initial?[['fix-the-road-v1',JSON.stringify(initial)]]:[]),texts=[];let now=0,nextFrame=0;
+ const frames=new Map(),store=storageMap||new Map(initial?[['fix-the-road-v1',JSON.stringify(initial)]]:[]),texts=[];let now=0,nextFrame=0;
  const context=new Proxy({measureText:t=>({width:String(t).length*7}),fillText:(...args)=>texts.push(args)},{get:(o,k)=>k in o?o[k]:()=>{},set:(o,k,v)=>(o[k]=v,true)});
  const canvas=Object.assign(realCanvas||{getContext:()=>context},events(),{getBoundingClientRect:()=>({left:0,top:0,width,height}),setPointerCapture(){}});
  const document={...events(),hidden:false,getElementById:id=>{assert.equal(id,'game');return canvas;}};
- const window={...events(),document,devicePixelRatio:1,requestAnimationFrame:fn=>{frames.set(++nextFrame,fn);return nextFrame;},cancelAnimationFrame:id=>frames.delete(id),getComputedStyle:()=>({getPropertyValue:name=>`${safeInsets[name.replace('--safe-','')]||0}px`}),localStorage:{getItem:key=>{if(storageThrows)throw Error('Blocked');return store.get(key)||null;},setItem:(key,val)=>{if(storageThrows)throw Error('Blocked');store.set(key,String(val));}},Audio:class{constructor(src){assert.ok(src.startsWith('data:audio/wav;base64,'));}play(){return Promise.resolve();}pause(){}}};
+ const window={...events(),document,devicePixelRatio:1,requestAnimationFrame:fn=>{frames.set(++nextFrame,fn);return nextFrame;},cancelAnimationFrame:id=>frames.delete(id),getComputedStyle:()=>({getPropertyValue:name=>`${safeInsets[name.replace('--safe-','')]||0}px`}),localStorage:{getItem:key=>{if(storageThrows)throw Error('Blocked');return store.get(key)||null;},setItem:(key,val)=>{if(storageThrows||storageWriteThrows)throw Error('Blocked');store.set(key,String(val));}},Audio:class{constructor(src){assert.ok(src.startsWith('data:audio/wav;base64,'));}play(){return Promise.resolve();}pause(){}}};
  const html=fs.readFileSync(fileURLToPath(new URL('../deliverables/fix-the-road-demo.html',import.meta.url)),'utf8');
  const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];assert.ok(script);
  vm.runInNewContext(script,{window,document,console},{timeout:2000});

@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.3.1",
   "reviewDate": "2026-10-14",
   "levelCount": 50,
   "baselineCommit": "e82c44f1c243f9be1a61349ffbd81c62c0260ee5",
@@ -11,8 +11,8 @@
   },
   "testCommand": "npm run check",
   "tests": {
-    "tests": 198,
-    "pass": 198,
+    "tests": 218,
+    "pass": 218,
     "fail": 0
   },
   "referenceProof": "artifacts/campaign-solutions.json",
@@ -37,7 +37,9 @@
     "reviveWork": 10,
     "reviveLimitPerRun": 1,
     "realMoney": false,
-    "freeRestart": true
+    "freeRestart": true,
+    "purchaseAccounting": "Durable per-run reservation; unfinished abandonment/reload refunds once; victory settles fee",
+    "writeFailure": "No temporary effect without confirmed durable debit and receipt"
   },
   "ads": {
     "ttMode": "disabled",
@@ -71,11 +73,21 @@
   },
   "standalone": {
     "path": "deliverables/fix-the-road-demo.html",
-    "bytes": 90526,
-    "sha256": "c60987738c3dcae1a9313388fb2437ed3f1385cfef1c2428d34826e777af2ac7"
+    "bytes": 94681,
+    "sha256": "ccac5cd5982221e6d077a6b8a339e6446982840b20275a21ecae4123efb5f706"
   },
-  "candidateManifestSha256": "61bd27d00f3d4d278281170ca8d46d06f8858d4b0ca9d7774b1224cbe5d03719",
-  "candidateGameSha256": "0df6f07e46a8f2af9bc825f23ad0482df1ac6c594bc631d62182b9f6c67f1e24",
+  "candidateManifestSha256": "e44bccfe118b7a3ad4ff2f8c939065412d5b7e2a5c68f9f401ef6ecfd2966b43",
+  "candidateGameSha256": "674f6eefdf5fc157624ed9747e2db420ce154e72d258eb99dd13728614fb8679",
   "uploaded": false,
-  "published": false
+  "published": false,
+  "purchaseFixParentCommit": "5f149f7ced128e8b07e5377f053d120a0adb4509",
+  "purchaseRecovery": {
+    "regressionsAdded": 20,
+    "sameStorageReload": true,
+    "repeatRefundSafe": true,
+    "bfcachePreservesRun": true,
+    "staleTabOverwriteGuard": true,
+    "crossProcessAtomicityGuaranteed": false,
+    "document": "docs/PURCHASE_RECOVERY.md"
+  }
 }

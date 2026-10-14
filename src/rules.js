@@ -105,7 +105,7 @@ export function useWorkTool(state) {
 }
 /** Version 1 saves migrate without losing clears. No server / money economy. */
 export function normalizeProgress(value, levelIds) {
-  const safe = { version: 2, completed: [], bestMoves: {}, sound: false, lastLevel: 1, coins: 0 };
+  const safe = { version: 2, completed: [], bestMoves: {}, sound: false, lastLevel: 1, coins: 0, pendingPurchase: null };
   if (!value || typeof value !== 'object' || ![1,2].includes(value.version)) return safe;
   safe.completed = [...new Set(Array.isArray(value.completed) ? value.completed.filter(id => levelIds.includes(id)) : [])];
   for (const id of safe.completed) {
@@ -115,13 +115,34 @@ export function normalizeProgress(value, levelIds) {
   safe.sound = value.sound === true;
   if (levelIds.includes(value.lastLevel)) safe.lastLevel = value.lastLevel;
   safe.coins=value.version===1?safe.completed.length*20:(Number.isInteger(value.coins)&&value.coins>=0?Math.min(value.coins,12000):0);
+  const pending=value.pendingPurchase;
+  if(value.version===2&&pending&&typeof pending==='object'&&typeof pending.token==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(pending.token)&&levelIds.includes(pending.levelId)&&typeof pending.workTool==='boolean'&&typeof pending.revive==='boolean'&&(pending.workTool||pending.revive))safe.pendingPurchase={token:pending.token,levelId:pending.levelId,workTool:pending.workTool,revive:pending.revive};
   return safe;
 }
 export function awardVictory(progress, level, moves) {
   const first=!progress.completed.includes(level.id);
-  return {...progress,completed:first?[...progress.completed,level.id]:[...progress.completed],bestMoves:{...progress.bestMoves,[level.id]:Math.min(progress.bestMoves[level.id]??Infinity,moves)},coins:Math.min(12000,progress.coins+(first?20:0))};
+  return {...progress,pendingPurchase:null,completed:first?[...progress.completed,level.id]:[...progress.completed],bestMoves:{...progress.bestMoves,[level.id]:Math.min(progress.bestMoves[level.id]??Infinity,moves)},coins:Math.min(12000,progress.coins+(first?20:0))};
 }
 export function spendCoins(progress, amount) {
   if (!Number.isInteger(amount)||amount<=0||progress.coins<amount) return null;
   return {...progress,coins:progress.coins-amount};
+}
+
+/** Coins are reserved for the active run; only a completed run consumes them.
+ * Dropping/reloading an unfinished run refunds the reservation exactly once.
+ * The complete deduction plus receipt must be persisted before giving an effect.
+ */
+export function pendingPurchaseAmount(progress) {
+  const p=progress.pendingPurchase;return p?(p.workTool?12:0)+(p.revive?20:0):0;
+}
+export function refundPendingPurchase(progress) {
+  const amount=pendingPurchaseAmount(progress);
+  return amount?{...progress,coins:Math.min(12000,progress.coins+amount),pendingPurchase:null}:progress;
+}
+export function reserveRunPurchase(progress,token,levelId,kind) {
+  if(!['workTool','revive'].includes(kind)||typeof token!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(token)||(!Number.isInteger(levelId)||levelId<1||levelId>50))return null;
+  const existing=progress.pendingPurchase;
+  if(existing&&(existing.token!==token||existing.levelId!==levelId||existing[kind]))return null;
+  const paid=spendCoins(progress,kind==='workTool'?12:20);if(!paid)return null;
+  return {...paid,pendingPurchase:{token,levelId,workTool:existing?.workTool===true,revive:existing?.revive===true,[kind]:true}};
 }
