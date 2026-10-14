@@ -1,0 +1,9 @@
+{
+  "name": "fix-the-road",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "修好这条路：双车接力道路旋转解谜浏览器测试版",
+  "scripts": { "test": "node --test", "serve": "node server.mjs", "check": "node --check src/app.js && node --check src/rules.js && node --check src/levels.js && node --test" },
+  "engines": { "node": ">=20" }
+}
