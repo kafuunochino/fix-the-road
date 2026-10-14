@@ -107,7 +107,7 @@ export function startGame(platform) {
       ctx.save();round(x,y,tileSize,tileSize,9);ctx.clip();
       if(tile.type==='park')drawPark(tile.decor,x,y,tileSize);else if(tile.type==='source'||tile.type==='destination')drawBuilding(tile,x,y,tileSize);else drawRoad(tile,x,y,tileSize,routeCells.has(i));ctx.restore();
       if(hint===i||preview&&route&&!route.ok&&route.at===i){round(x+2,y+2,tileSize-4,tileSize-4,8,null,hint===i?'#9b72bb':'#d5aa83');ctx.lineWidth=2;}
-      if(isEditable(tile)&&!animation&&!isComplete(state,level))hits.push({id:`tile-${i}`,x,y,w:tileSize,h:tileSize,fn:()=>{state=turnTile(state,i);hint=-1;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';sound(tile.type==='switch'?'switch':'turn');schedule();}});
+      if(isEditable(tile)&&!animation&&!isComplete(state,level))hits.push({id:`tile-${i}`,x,y,w:tileSize,h:tileSize,fn:()=>{if(animation||isComplete(state,level))return;state=turnTile(state,i);hint=-1;message=preview?routeMessage(traceRoute(level,state.board,currentVehicle())):'';sound(tile.type==='switch'?'switch':'turn');schedule();}});
     });
     if(animation){const route=animation.outcome.result.path,t=Math.min(animation.elapsed/190,route.length-1),a=Math.floor(t),b=Math.min(a+1,route.length-1),f=t-a,from=route[a],to=route[b],col=(from%level.width)*(1-f)+(to%level.width)*f,row=Math.floor(from/level.width)*(1-f)+Math.floor(to/level.width)*f;const delta=to-from|| (a>0?from-route[a-1]:1),angle=delta===1?0:delta===-1?Math.PI:delta>0?Math.PI/2:-Math.PI/2;drawCar(bx+col*(tileSize+gap)+tileSize/2,by+row*(tileSize+gap)+tileSize/2,tileSize*.66,animation.vehicle.color,angle);}
   }
@@ -151,11 +151,24 @@ export function startGame(platform) {
   }
   const unsubscribers=[platform.onPointer(event=>{
     if(destroyed||paused)return;const x=(event.x-transform.x)/transform.scale,y=(event.y-transform.y)/transform.scale;
-    if(event.type==='down'){gesture={x,y,id:event.id};return;}
+    const targetAt=(px,py)=>[...hits].reverse().find(h=>px>=h.x&&px<=h.x+h.w&&py>=h.y&&py<=h.y+h.h);
+    if(event.type==='down'){
+      if(gesture)return; // One active finger owns a tap; ignore secondary touches.
+      gesture={x,y,id:event.id,targetId:targetAt(x,y)?.id??null};return;
+    }
+    if(!gesture||gesture.id!==event.id)return;
     if(event.type==='cancel'){gesture=null;return;}
+    if(event.type==='move'){
+      if(Math.hypot(x-gesture.x,y-gesture.y)>15)gesture.targetId=null;
+      return;
+    }
     if(event.type!=='up')return;
-    const down=gesture;gesture=null;if(!down||down.id!==event.id||Math.hypot(x-down.x,y-down.y)>15)return;
-    const hit=[...hits].reverse().find(h=>x>=h.x&&x<=h.x+h.w&&y>=h.y&&y<=h.y+h.h);if(hit)hit.fn();
+    const down=gesture;gesture=null;
+    if(!down.targetId||Math.hypot(x-down.x,y-down.y)>15)return;
+    const hit=targetAt(x,y);
+    if(hit?.id!==down.targetId)return;
+    // Never reuse a rendered closure after a synchronous state transition.
+    hits=[];hit.fn();schedule();
   }),platform.onResize(()=>{gesture=null;schedule();}),platform.onPause(()=>{paused=true;gesture=null;previousTime=null;if(frameId!==null){platform.cancelFrame(frameId);frameId=null;}}),platform.onResume(()=>{paused=false;previousTime=null;schedule();})];
   schedule();
   return {destroy(){destroyed=true;animation=null;if(frameId!==null)platform.cancelFrame(frameId);unsubscribers.forEach(fn=>{if(typeof fn==='function')fn();});},getSnapshot(){return {levelId:level.id,moves:state.moves,nextVehicle:state.nextVehicle,complete:isComplete(state,level),busy:!!animation,modal,preview,message,storageOK,board:state.board.map(t=>({...t,...(t.exits?{exits:[...t.exits]}:{})})),hitTargets:hits.map(({id,x,y,w,h})=>({id,x,y,w,h})),transform:{...transform}};}};

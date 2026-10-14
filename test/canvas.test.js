@@ -58,3 +58,29 @@ test('storage denied and cancelled gestures cannot break gameplay',()=>{
   const app=makePlatform({storageThrows:true});assert.equal(app.game.getSnapshot().storageOK,false);app.tap('sound');app.tap('levels');app.tap('level-2');assert.equal(app.game.getSnapshot().levelId,2);
   app.emit('pointer',{type:'down',x:50,y:100,id:7});app.emit('pointer',{type:'cancel',x:50,y:100,id:7});app.emit('pointer',{type:'up',x:50,y:100,id:7});assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
 });
+
+test('a tap starting in a gap cannot activate a tile on release',()=>{
+  const app=makePlatform();const hit=app.game.getSnapshot().hitTargets.find(h=>h.id.startsWith('tile-'));
+  app.emit('pointer',{type:'down',x:hit.x-2,y:hit.y+hit.h/2,id:1});app.emit('pointer',{type:'up',x:hit.x+2,y:hit.y+hit.h/2,id:1});app.tick();
+  assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
+});
+
+test('dispatch invalidates stale board and control hit targets before the next frame',()=>{
+  const app=makePlatform();const before=app.game.getSnapshot();const tile=before.hitTargets.find(h=>h.id.startsWith('tile-')),send=before.hitTargets.find(h=>h.id==='dispatch'),reset=before.hitTargets.find(h=>h.id==='reset');
+  const rawTap=(hit,id)=>{app.emit('pointer',{type:'down',x:hit.x+hit.w/2,y:hit.y+hit.h/2,id});app.emit('pointer',{type:'up',x:hit.x+hit.w/2,y:hit.y+hit.h/2,id});};
+  rawTap(send,1);assert.equal(app.game.getSnapshot().busy,true);assert.equal(app.game.getSnapshot().hitTargets.length,0);
+  rawTap(tile,2);rawTap(reset,3);assert.equal(app.game.getSnapshot().moves,before.moves);assert.equal(app.game.getSnapshot().busy,true);
+  app.finish();assert.equal(app.game.getSnapshot().moves,before.moves);app.game.destroy();
+});
+
+test('secondary touches cannot overwrite or cancel the primary tap',()=>{
+  const app=makePlatform();const tile=app.game.getSnapshot().hitTargets.find(h=>h.id.startsWith('tile-')),x=tile.x+tile.w/2,y=tile.y+tile.h/2;
+  app.emit('pointer',{type:'down',x,y,id:1});app.emit('pointer',{type:'down',x,y,id:2});app.emit('pointer',{type:'up',x,y,id:2});app.emit('pointer',{type:'cancel',x,y,id:2});app.emit('pointer',{type:'up',x,y,id:1});app.tick();
+  assert.equal(app.game.getSnapshot().moves,1);app.game.destroy();
+});
+
+test('dragging away and back does not turn a road',()=>{
+  const app=makePlatform();const tile=app.game.getSnapshot().hitTargets.find(h=>h.id.startsWith('tile-')),x=tile.x+tile.w/2,y=tile.y+tile.h/2;
+  app.emit('pointer',{type:'down',x,y,id:1});app.emit('pointer',{type:'move',x:x+25,y,id:1});app.emit('pointer',{type:'move',x,y,id:1});app.emit('pointer',{type:'up',x,y,id:1});app.tick();
+  assert.equal(app.game.getSnapshot().moves,0);app.game.destroy();
+});
