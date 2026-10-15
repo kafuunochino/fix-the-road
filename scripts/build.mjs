@@ -1,3 +1,5 @@
+import transformer from './transform-es2018.cjs';
+const { transformES2018 } = transformer;
 import { readFile, mkdir, writeFile, copyFile } from 'node:fs/promises';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -41,7 +43,7 @@ const wav=await readFile(path.join(root,'assets/tap.wav'));
 const audioNames=['turn','switch','send','win','error'];
 const ttAudio=Object.fromEntries(audioNames.map(name=>[name,'assets/tap.wav']));
 const ttEntry=`const platform=createTTPlatform(tt,{requestAnimationFrame,cancelAnimationFrame},${JSON.stringify(ttAudio)});\nstartGame(platform);`;
-const ttCode=assemble([...core,'adapters/rewarded.js','adapters/douyin-sidebar.js','adapters/tt.js'],ttEntry);new vm.Script(ttCode,{filename:'game.js'});
+const ttCode=transformES2018(assemble([...core,'adapters/rewarded.js','adapters/douyin-sidebar.js','adapters/tt.js'],ttEntry));new vm.Script(ttCode,{filename:'game.js'});
 const out=path.join(root,'dist/douyin');await mkdir(path.join(out,'assets'),{recursive:true});
 await writeFile(path.join(out,'game.js'),ttCode);
 await writeFile(path.join(out,'game.json'),JSON.stringify({deviceOrientation:'portrait',showStatusBar:false,menuButtonStyle:'light'},null,2)+'\n');
