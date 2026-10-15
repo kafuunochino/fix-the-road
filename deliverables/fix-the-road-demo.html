@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102c40"><title>修好这条路 · 城市复线 · 50关 0.3.1</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102c40}canvas{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>(function(){
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#102c40"><title>修好这条路 · 城市复线 · 50关 0.3.2</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#102c40}canvas{--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);display:block;width:100%;height:100%;height:100dvh;touch-action:none}</style></head><body><canvas id="game" aria-label="修好这条路：点击道路旋转，橙色岔口切换方向，完成后发车。"></canvas><script>(function(){
 'use strict';
 // Source: src/rules.js
 /** Pure road rules. Directions clockwise: north, east, south, west. */
@@ -447,18 +447,18 @@ function startGame(platform) {
   function stripe(x,y,w,h){
     ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.fillStyle='#ffca51';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#26343c';ctx.lineWidth=8;for(let xx=x-h;xx<x+w+h;xx+=17){ctx.beginPath();ctx.moveTo(xx,y+h);ctx.lineTo(xx+h,y);ctx.stroke();}ctx.restore();
   }
-  function blueprint(){
-    ctx.fillStyle=colors.paper;ctx.fillRect(0,0,W,H);ctx.strokeStyle='#2a3640';ctx.lineWidth=1;
-    for(let x=0;x<W;x+=24){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-    for(let y=0;y<H;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  function blueprint(width=W,height=H){
+    ctx.fillStyle=colors.paper;ctx.fillRect(0,0,width,height);ctx.strokeStyle='#2a3640';ctx.lineWidth=1;
+    for(let x=0;x<width;x+=24){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke();}
+    for(let y=0;y<height;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke();}
   }
   function drawSkyline(y,h){
     // A layered working city, not a decorative web card. This fits only in spare
     // vertical space so the minimum phone still prioritizes the actual map.
     if(h<42)return;
     const base=y+h;ctx.save();ctx.beginPath();ctx.rect(0,y,W,h);ctx.clip();
-    for(let i=0;i<12;i++){
-      const x=i*41-12,hh=24+((i*17+level.id*3)%39);ctx.fillStyle=i%2?'#303f45':'#34464c';ctx.fillRect(x,base-hh,34,hh);
+    for(let i=0;i<Math.ceil(W/41)+1;i++){
+      const x=i*41-12,hh=Math.min(h-6,24+((i*17+level.id*3)%39)+(h>100?(i%3)*h*.16:0));ctx.fillStyle=i%2?'#303f45':'#34464c';ctx.fillRect(x,base-hh,34,hh);
       ctx.fillStyle='#56656a';ctx.fillRect(x+2,base-hh,30,2);
       for(let r=0;r<3;r++)for(let c=0;c<3;c++){ctx.fillStyle=(r+c+i)%4?'#1d2e38':'#b9985f';ctx.fillRect(x+6+c*8,base-hh+8+r*11,3,4);}
     }
@@ -505,6 +505,17 @@ function startGame(platform) {
     if(layout.boardY-missionY>70){text(`施工图 ${String(level.id).padStart(2,'0')} / ${level.title}`,12,layout.boardY-17,12,colors.muted);}
     drawBoard();
     if(layout.boardY+layout.boardSize+25<myStatus){text('黄色：面包   /   紫色：鲜花   /   橙色：岔口',W/2,layout.boardY+layout.boardSize+22,10,colors.muted,'center');}
+    // A continuous city/depot fills tall-phone space below the square puzzle;
+    // it is scenery, never an extra hit region or a stretched road tile.
+    const depotTop=layout.boardY+layout.boardSize+42,depotHeight=myStatus-depotTop-12;
+    if(depotHeight>=48){
+      drawSkyline(depotTop,Math.max(42,depotHeight-28));
+      const roadY=depotTop+depotHeight-20;
+      path([[0,roadY],[W,roadY]],'#17242b',28);
+      path([[0,roadY],[W,roadY]],'#77928e',1,true);
+      drawCar(W*.22,roadY,26,colors.yellow);
+      drawCar(W*.67,roadY,26,colors.purple,Math.PI);
+    }
     const tip=message||(level.id>10?level.note:sidebarState?.enteredFromSidebar?'欢迎从侧边栏回来，继续修路。':level.id>=5?'先送面包，再切换橙色岔口送鲜花。':'点道路旋转，让车库与目的地接通。');
     path([[13,myStatus+3],[13,myStatus+(compact?19:29)]],colors.yellow,3);wrap(tip,24,myStatus+9,W-38,compact?11:12,17,colors.ink,compact?1:2);
     const locked=!!animation||!!state.failed||adPending;
@@ -579,11 +590,12 @@ function startGame(platform) {
     const size=platform.getSize(),{width,height,dpr}=size,raw=size.safeInsets||{};
     const inset=(value,max)=>Math.max(0,Math.min(Number(value)||0,max));
     const safe={top:inset(raw.top,height/3),right:inset(raw.right,width/4),bottom:inset(raw.bottom,height/3),left:inset(raw.left,width/4)};
-    W=Math.min(480,width-safe.left-safe.right);H=Math.min(920,height-safe.top-safe.bottom);
-    transform={scale:1,x:safe.left+(width-safe.left-safe.right-W)/2,y:safe.top+(height-safe.top-safe.bottom-H)/2};
+    // Fill the entire host viewport. Insets protect controls, not the scene.
+    W=width-safe.left-safe.right;H=height-safe.top-safe.bottom;
+    transform={scale:1,x:safe.left,y:safe.top};
     const compact=H<490,margin=H<540?4:8,missionY=margin+48,missionH=compact?20:H<650?36:44,boardTop=missionY+missionH+(compact?4:8),footerH=compact?44:52,footerY=H-margin-footerH,myStatus=footerY-(compact?2:4)-(compact?24:H<650?32:40),boardAvailable=myStatus-boardTop-(compact?4:6),boardGap=W<274?0:2,minMapWidth=level.width*44+boardGap*(level.width-1),mapPad=Math.max(0,Math.min(12,(W-minMapWidth)/2)),boardSize=Math.min(W-2*mapPad,boardAvailable);
-    layout={boardGap,compact,margin,missionY,myStatus,footerY,footerH,boardX:(W-boardSize)/2,boardY:boardTop+(boardAvailable-boardSize)/2,boardSize,width:W,height:H,safeInsets:safe};
-    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#091e2e';ctx.fillRect(0,0,width,height);ctx.translate(transform.x,transform.y);hits=[];blueprint();drawMain();if(modal)drawModal();if(animation)schedule();
+    layout={viewportWidth:width,viewportHeight:height,dpr,boardGap,compact,margin,missionY,myStatus,footerY,footerH,boardX:(W-boardSize)/2,boardY:boardTop+Math.min(96,(boardAvailable-boardSize)*.40),boardSize,width:W,height:H,safeInsets:safe};
+    ctx.setTransform(dpr,0,0,dpr,0,0);blueprint(width,height);ctx.translate(transform.x,transform.y);hits=[];drawMain();if(modal)drawModal();if(animation)schedule();
   }
   const unsubscribers=[platform.onPointer(event=>{
     if(destroyed||paused)return;const x=(event.x-transform.x)/transform.scale,y=(event.y-transform.y)/transform.scale;

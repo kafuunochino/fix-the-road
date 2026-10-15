@@ -12,14 +12,19 @@ export function createTTPlatform(api, scheduler, audioPaths = {}) {
   const subscribe = name => fn => { listeners[name].add(fn); return () => listeners[name].delete(fn); };
   const bind = (on, off, fn) => { if (typeof api[on] === 'function') { api[on](fn); removers.push(() => { if (typeof api[off] === 'function') api[off](fn); }); } };
   let size;
-  function resize() {
+  function resize(event) {
     const info = api.getSystemInfoSync();
-    const width=info.windowWidth||info.screenWidth,height=info.windowHeight||info.screenHeight,area=info.safeArea||{};
+    // Native on-screen Canvas is screen-sized (not a DOM canvas). Explicit
+    // resize-event dimensions win for hosts with a resized game container.
+    const changed=event?.size||event||{};
+    const positive=n=>Number.isFinite(Number(n))&&Number(n)>0?Number(n):0;
+    const width=positive(changed.windowWidth)||positive(info.screenWidth)||positive(info.windowWidth);
+    const height=positive(changed.windowHeight)||positive(info.screenHeight)||positive(info.windowHeight),area=info.safeArea||{};
     const bounded=(n,max)=>Math.max(0,Math.min(Number(n)||0,max));
     const safeInsets={top:bounded(area.top,height/3),left:bounded(area.left,width/4),right:bounded(width-(area.right??((area.left||0)+(area.width||width))),width/4),bottom:bounded(height-(area.bottom??((area.top||0)+(area.height||height))),height/3)};
     // Some hosts place their own menu capsule below the OS notch area.
     // Reserve its bottom edge when the optional host API is available.
-    try { const menu=api.getMenuButtonBoundingClientRect?.(); if(Number.isFinite(menu?.bottom)&&menu.bottom>0)safeInsets.top=Math.max(safeInsets.top,bounded(menu.bottom+8,height/3)); } catch { /* Optional capability; keep the OS safe area. */ }
+    try { const menu=typeof api.getMenuButtonLayout==='function'?api.getMenuButtonLayout():api.getMenuButtonBoundingClientRect?.(); if(Number.isFinite(menu?.bottom)&&menu.bottom>0)safeInsets.top=Math.max(safeInsets.top,bounded(menu.bottom+8,height/3)); } catch { /* Optional capability; keep the OS safe area. */ }
     const next = { width, height, dpr: Math.min(info.pixelRatio || 1, 3), safeInsets };
     if (!(next.width > 0 && next.height > 0)) throw new Error('Platform viewport dimensions are missing');
     if (size && next.width === size.width && next.height === size.height && next.dpr === size.dpr && JSON.stringify(next.safeInsets)===JSON.stringify(size.safeInsets)) return;
@@ -39,7 +44,9 @@ export function createTTPlatform(api, scheduler, audioPaths = {}) {
   const stopAudio = () => sounds.forEach(sound => sound.pause());
   bind('onHide', 'offHide', () => { stopAudio(); emit('pause'); });
   bind('onShow', 'offShow', () => { resize(); emit('resume'); });
-  // The spike is portrait-only. Verify host resize behavior before landscape/tablet support.
+  // Optional onWindowResize on hosts that expose it; unsupported hosts still
+  // refresh dimensions on every onShow. Never multiply touch coordinates by DPR.
+  bind('onWindowResize', 'offWindowResize', resize);
   return {
     canvas, sidebar, rewards, getSize: () => ({ ...size }),
     onPointer: subscribe('pointer'), onResize: subscribe('resize'), onPause: subscribe('pause'), onResume: subscribe('resume'),

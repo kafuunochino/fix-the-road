@@ -1,0 +1,37 @@
+{
+  "verification": "Simulated tt host, exact native bundle, real Canvas raster. NOT physical phone.",
+  "size": {
+    "width": 412,
+    "height": 1000,
+    "dpr": 2.625,
+    "safeInsets": {
+      "top": 64,
+      "left": 0,
+      "right": 0,
+      "bottom": 24
+    }
+  },
+  "layout": {
+    "viewportWidth": 412,
+    "viewportHeight": 1000,
+    "dpr": 2.625,
+    "boardGap": 2,
+    "compact": false,
+    "margin": 8,
+    "missionY": 56,
+    "myStatus": 808,
+    "footerY": 852,
+    "footerH": 52,
+    "boardX": 12,
+    "boardY": 204,
+    "boardSize": 388,
+    "width": 412,
+    "height": 912,
+    "safeInsets": {
+      "top": 64,
+      "right": 0,
+      "bottom": 24,
+      "left": 0
+    }
+  }
+}

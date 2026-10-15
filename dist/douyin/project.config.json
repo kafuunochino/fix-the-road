@@ -1,0 +1,8 @@
+{
+  "description": "城市复线：50关施工调度。0.3.2修复手机全屏布局，待上传及真机复测；真实广告关闭。",
+  "projectname": "修好这条路",
+  "appid": "tt0b947d2995edc0c502",
+  "setting": {
+    "es6": true
+  }
+}

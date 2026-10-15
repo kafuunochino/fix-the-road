@@ -1377,21 +1377,21 @@
       }
       ctx.restore();
     }
-    function blueprint() {
+    function blueprint(width = W, height = H) {
       ctx.fillStyle = colors.paper;
-      ctx.fillRect(0, 0, W, H);
+      ctx.fillRect(0, 0, width, height);
       ctx.strokeStyle = '#2a3640';
       ctx.lineWidth = 1;
-      for (let x = 0; x < W; x += 24) {
+      for (let x = 0; x < width; x += 24) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, H);
+        ctx.lineTo(x, height);
         ctx.stroke();
       }
-      for (let y = 0; y < H; y += 24) {
+      for (let y = 0; y < height; y += 24) {
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(W, y);
+        ctx.lineTo(width, y);
         ctx.stroke();
       }
     }
@@ -1404,9 +1404,9 @@
       ctx.beginPath();
       ctx.rect(0, y, W, h);
       ctx.clip();
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < Math.ceil(W / 41) + 1; i++) {
         const x = i * 41 - 12,
-          hh = 24 + (i * 17 + level.id * 3) % 39;
+          hh = Math.min(h - 6, 24 + (i * 17 + level.id * 3) % 39 + (h > 100 ? i % 3 * h * .16 : 0));
         ctx.fillStyle = i % 2 ? '#303f45' : '#34464c';
         ctx.fillRect(x, base - hh, 34, hh);
         ctx.fillStyle = '#56656a';
@@ -1557,6 +1557,18 @@
       drawBoard();
       if (layout.boardY + layout.boardSize + 25 < myStatus) {
         text('黄色：面包   /   紫色：鲜花   /   橙色：岔口', W / 2, layout.boardY + layout.boardSize + 22, 10, colors.muted, 'center');
+      }
+      // A continuous city/depot fills tall-phone space below the square puzzle;
+      // it is scenery, never an extra hit region or a stretched road tile.
+      const depotTop = layout.boardY + layout.boardSize + 42,
+        depotHeight = myStatus - depotTop - 12;
+      if (depotHeight >= 48) {
+        drawSkyline(depotTop, Math.max(42, depotHeight - 28));
+        const roadY = depotTop + depotHeight - 20;
+        path([[0, roadY], [W, roadY]], '#17242b', 28);
+        path([[0, roadY], [W, roadY]], '#77928e', 1, true);
+        drawCar(W * .22, roadY, 26, colors.yellow);
+        drawCar(W * .67, roadY, 26, colors.purple, Math.PI);
       }
       const tip = message || (level.id > 10 ? level.note : (_chainObject13 = sidebarState, _chainObject13 === null || _chainObject13 === void 0 ? void 0 : _chainObject13.enteredFromSidebar) ? '欢迎从侧边栏回来，继续修路。' : level.id >= 5 ? '先送面包，再切换橙色岔口送鲜花。' : '点道路旋转，让车库与目的地接通。');
       path([[13, myStatus + 3], [13, myStatus + (compact ? 19 : 29)]], colors.yellow, 3);
@@ -1822,12 +1834,13 @@
         bottom: inset(raw.bottom, height / 3),
         left: inset(raw.left, width / 4)
       };
-      W = Math.min(480, width - safe.left - safe.right);
-      H = Math.min(920, height - safe.top - safe.bottom);
+      // Fill the entire host viewport. Insets protect controls, not the scene.
+      W = width - safe.left - safe.right;
+      H = height - safe.top - safe.bottom;
       transform = {
         scale: 1,
-        x: safe.left + (width - safe.left - safe.right - W) / 2,
-        y: safe.top + (height - safe.top - safe.bottom - H) / 2
+        x: safe.left,
+        y: safe.top
       };
       const compact = H < 490,
         margin = H < 540 ? 4 : 8,
@@ -1843,6 +1856,9 @@
         mapPad = Math.max(0, Math.min(12, (W - minMapWidth) / 2)),
         boardSize = Math.min(W - 2 * mapPad, boardAvailable);
       layout = {
+        viewportWidth: width,
+        viewportHeight: height,
+        dpr,
         boardGap,
         compact,
         margin,
@@ -1851,18 +1867,16 @@
         footerY,
         footerH,
         boardX: (W - boardSize) / 2,
-        boardY: boardTop + (boardAvailable - boardSize) / 2,
+        boardY: boardTop + Math.min(96, (boardAvailable - boardSize) * .40),
         boardSize,
         width: W,
         height: H,
         safeInsets: safe
       };
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = '#091e2e';
-      ctx.fillRect(0, 0, width, height);
+      blueprint(width, height);
       ctx.translate(transform.x, transform.y);
       hits = [];
-      blueprint();
       drawMain();
       if (modal) drawModal();
       if (animation) schedule();
@@ -2270,11 +2284,15 @@
       }
     };
     let size;
-    function resize() {
-      var _nullish6, _nullish7;
+    function resize(event) {
+      var _chainObject31, _nullish6, _nullish7;
       const info = api.getSystemInfoSync();
-      const width = info.windowWidth || info.screenWidth,
-        height = info.windowHeight || info.screenHeight,
+      // Native on-screen Canvas is screen-sized (not a DOM canvas). Explicit
+      // resize-event dimensions win for hosts with a resized game container.
+      const changed = (_chainObject31 = event, _chainObject31 === null || _chainObject31 === void 0 ? void 0 : _chainObject31.size) || event || {};
+      const positive = n => Number.isFinite(Number(n)) && Number(n) > 0 ? Number(n) : 0;
+      const width = positive(changed.windowWidth) || positive(info.screenWidth) || positive(info.windowWidth);
+      const height = positive(changed.windowHeight) || positive(info.screenHeight) || positive(info.windowHeight),
         area = info.safeArea || {};
       const bounded = (n, max) => Math.max(0, Math.min(Number(n) || 0, max));
       const safeInsets = {
@@ -2286,9 +2304,9 @@
       // Some hosts place their own menu capsule below the OS notch area.
       // Reserve its bottom edge when the optional host API is available.
       try {
-        var _callReceiver0, _chainFunction15, _chainObject31;
-        const menu = (_callReceiver0 = api, _chainFunction15 = _callReceiver0.getMenuButtonBoundingClientRect, _chainFunction15 === null || _chainFunction15 === void 0 ? void 0 : _chainFunction15.call(_callReceiver0));
-        if (Number.isFinite((_chainObject31 = menu, _chainObject31 === null || _chainObject31 === void 0 ? void 0 : _chainObject31.bottom)) && menu.bottom > 0) safeInsets.top = Math.max(safeInsets.top, bounded(menu.bottom + 8, height / 3));
+        var _callReceiver0, _chainFunction15, _chainObject32;
+        const menu = typeof api.getMenuButtonLayout === 'function' ? api.getMenuButtonLayout() : (_callReceiver0 = api, _chainFunction15 = _callReceiver0.getMenuButtonBoundingClientRect, _chainFunction15 === null || _chainFunction15 === void 0 ? void 0 : _chainFunction15.call(_callReceiver0));
+        if (Number.isFinite((_chainObject32 = menu, _chainObject32 === null || _chainObject32 === void 0 ? void 0 : _chainObject32.bottom)) && menu.bottom > 0) safeInsets.top = Math.max(safeInsets.top, bounded(menu.bottom + 8, height / 3));
       } catch (_ignoredError1) {/* Optional capability; keep the OS safe area. */}
       const next = {
         width,
@@ -2308,8 +2326,8 @@
     resize();
     for (const [suffix, type] of [['Start', 'down'], ['Move', 'move'], ['End', 'up'], ['Cancel', 'cancel']]) {
       bind('onTouch' + suffix, 'offTouch' + suffix, event => {
-        var _chainObject32;
-        const touches = (_chainObject32 = event.changedTouches, _chainObject32 === null || _chainObject32 === void 0 ? void 0 : _chainObject32.length) ? event.changedTouches : event.touches || [];
+        var _chainObject33;
+        const touches = (_chainObject33 = event.changedTouches, _chainObject33 === null || _chainObject33 === void 0 ? void 0 : _chainObject33.length) ? event.changedTouches : event.touches || [];
         touches.forEach(touch => emit('pointer', {
           type,
           x: touch.clientX,
@@ -2328,7 +2346,9 @@
       resize();
       emit('resume');
     });
-    // The spike is portrait-only. Verify host resize behavior before landscape/tablet support.
+    // Optional onWindowResize on hosts that expose it; unsupported hosts still
+    // refresh dimensions on every onShow. Never multiply touch coordinates by DPR.
+    bind('onWindowResize', 'offWindowResize', resize);
     return {
       canvas,
       sidebar,

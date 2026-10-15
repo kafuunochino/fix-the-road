@@ -1,11 +1,11 @@
 {
   "appid": "tt0b947d2995edc0c502",
   "projectname": "修好这条路",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "files": {
-    "game.js": "674f6eefdf5fc157624ed9747e2db420ce154e72d258eb99dd13728614fb8679",
+    "game.js": "d3216982f727141b81d8aa3ddd92ce7c4d5d0bd3270033abedca18c32e8a9cbd",
     "game.json": "d1180a9a99f80b72cf2d44013d0462a6824f355b12c0ae7bddb3ced53cb584ce",
-    "project.config.json": "05d7ca6d00795bdd043066e8320521e0eff7f2017901a88dd353eaf3eea2e76a",
+    "project.config.json": "ac4b3e47c1776a24a877dca77999360e98c2806bf8bebb126230913dca306b1e",
     "assets/tap.wav": "1d2b6229ca59779073d214b2770e798e9556e131bd5a94c2530bd907401d7b63"
   }
 }
