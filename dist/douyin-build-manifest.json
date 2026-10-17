@@ -1,11 +1,16 @@
 {
-  "appid": "tt0b947d2995edc0c502",
+  "appid": "",
   "projectname": "修好这条路",
   "version": "0.3.2",
   "files": {
-    "game.js": "d3216982f727141b81d8aa3ddd92ce7c4d5d0bd3270033abedca18c32e8a9cbd",
+    "game.js": "dcb6a410ce13d929cb46fba3aaa5f7d983d4f6a81d2cf32401c4a5a97e0534c3",
     "game.json": "d1180a9a99f80b72cf2d44013d0462a6824f355b12c0ae7bddb3ced53cb584ce",
-    "project.config.json": "ac4b3e47c1776a24a877dca77999360e98c2806bf8bebb126230913dca306b1e",
-    "assets/tap.wav": "1d2b6229ca59779073d214b2770e798e9556e131bd5a94c2530bd907401d7b63"
+    "project.config.json": "c74d039063b496b3468575904580c7f4a15df7d3005cd1f422cc9212ad0a0957",
+    "assets/tap.wav": "1d2b6229ca59779073d214b2770e798e9556e131bd5a94c2530bd907401d7b63",
+    "assets/turn.wav": "5f3efaf27620dfbc5746454b0e49602b893cfa676953c38bfbef83905fe107e2",
+    "assets/switch.wav": "60bc95a48a1ea0facf48fcd20bcebc94b4e44b264c6a8af3001648ed26cfafc2",
+    "assets/send.wav": "db1bc772d7b7d847b519e81aba419ae1c60a98ec02e456791b15ac8d3005e86c",
+    "assets/win.wav": "79f2d58f39cedc4416e69612c9c5a76ccfe8c8159b7a2706e27da2f58a1c08e0",
+    "assets/error.wav": "08e6f0abc89ad730ef2c14c34aaef8aef7b68604eb55a8982e791d8ce4e7d0c4"
   }
 }

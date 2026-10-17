@@ -3,7 +3,7 @@
   "version": "0.3.2",
   "private": true,
   "type": "module",
-  "description": "城市复线：50关道路调度与模块化施工离线Demo",
+  "description": "修好这条路｜停止维护的道路调度实验原型（游戏废案）",
   "scripts": {
     "test": "node scripts/build.mjs && node --test",
     "serve": "node server.mjs",

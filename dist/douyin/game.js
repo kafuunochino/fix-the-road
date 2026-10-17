@@ -1084,6 +1084,7 @@
       round(x, y, w, h, 3, fill, fill === colors.yellow ? '#ffe29a' : '#598394');
       text(label, x + w / 2, y + h / 2, size, color, 'center', '700');
       ctx.globalAlpha = 1;
+      if (gesture && gesture.targetId === id && !disabled) round(x + 2, y + 2, w - 4, h - 4, 3, 'rgba(255,255,255,0.16)');
       if (!disabled) hits.push({
         id,
         x,
@@ -1896,20 +1897,26 @@
           id: event.id,
           targetId: (_nullish4 = (_chainObject23 = targetAt(x, y), _chainObject23 === null || _chainObject23 === void 0 ? void 0 : _chainObject23.id), _nullish4 === null || _nullish4 === void 0 ? null : _nullish4)
         };
+        schedule();
         return;
       }
       if (!gesture || gesture.id !== event.id) return;
       if (event.type === 'cancel') {
         gesture = null;
+        schedule();
         return;
       }
       if (event.type === 'move') {
-        if (Math.hypot(x - gesture.x, y - gesture.y) > 15) gesture.targetId = null;
+        if (Math.hypot(x - gesture.x, y - gesture.y) > 15) {
+          gesture.targetId = null;
+          schedule();
+        }
         return;
       }
       if (event.type !== 'up') return;
       const down = gesture;
       gesture = null;
+      schedule();
       if (!down.targetId || Math.hypot(x - down.x, y - down.y) > 15) return;
       const hit = targetAt(x, y);
       if ((_chainObject24 = hit, _chainObject24 === null || _chainObject24 === void 0 ? void 0 : _chainObject24.id) !== down.targetId) return;
@@ -2336,13 +2343,22 @@
         }));
       });
     }
-    let muted = false;
-    const stopAudio = () => sounds.forEach(sound => sound.pause());
+    let muted = false,
+      audioPaused = false,
+      audioDestroyed = false;
+    const safeAudioCall = (sound, method, ...args) => {
+      try {
+        if (typeof sound[method] === 'function') sound[method](...args);
+      } catch (_) {/* A broken optional audio method must not interrupt game lifecycle. */}
+    };
+    const stopAudio = () => sounds.forEach(sound => safeAudioCall(sound, 'pause'));
     bind('onHide', 'offHide', () => {
+      audioPaused = true;
       stopAudio();
       emit('pause');
     });
     bind('onShow', 'offShow', () => {
+      audioPaused = false;
       resize();
       emit('resume');
     });
@@ -2373,7 +2389,7 @@
       },
       audio: {
         play(name) {
-          if (muted || !audioPaths[name] || typeof api.createInnerAudioContext !== 'function') return;
+          if (muted || audioPaused || audioDestroyed || !audioPaths[name] || typeof api.createInnerAudioContext !== 'function') return;
           try {
             let sound = sounds.get(name);
             if (!sound) {
@@ -2383,8 +2399,8 @@
               _callReceiver1 = sound, _chainFunction16 = _callReceiver1.onError, _chainFunction16 === null || _chainFunction16 === void 0 ? void 0 : _chainFunction16.call(_callReceiver1, () => {});
               sounds.set(name, sound);
             }
-            sound.seek(0);
-            sound.play();
+            safeAudioCall(sound, 'seek', 0);
+            safeAudioCall(sound, 'play');
           } catch (_ignoredError10) {/* Audio failure must not block play. */}
         },
         setMuted(value) {
@@ -2393,10 +2409,14 @@
         }
       },
       destroy() {
+        if (audioDestroyed) return;
+        audioDestroyed = true;
+        stopAudio();
         rewards.destroy();
         sidebar.destroy();
         removers.forEach(fn => fn());
-        sounds.forEach(sound => sound.destroy());
+        sounds.forEach(sound => safeAudioCall(sound, 'destroy'));
+        sounds.clear();
         Object.values(listeners).forEach(set => set.clear());
       }
     };
@@ -2405,11 +2425,11 @@
     requestAnimationFrame,
     cancelAnimationFrame
   }, {
-    "turn": "assets/tap.wav",
-    "switch": "assets/tap.wav",
-    "send": "assets/tap.wav",
-    "win": "assets/tap.wav",
-    "error": "assets/tap.wav"
+    "turn": "assets/turn.wav",
+    "switch": "assets/switch.wav",
+    "send": "assets/send.wav",
+    "win": "assets/win.wav",
+    "error": "assets/error.wav"
   });
   startGame(platform);
 })();

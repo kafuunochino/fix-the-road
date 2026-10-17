@@ -74,6 +74,7 @@ export function startGame(platform) {
   function button(id,label,x,y,w,h,fn,{fill='#1c4054',color=colors.ink,disabled=false,size=13}={}){
     ctx.globalAlpha=disabled ? 0.38 : 1;round(x,y+3,w,h,3,'#061c2a');round(x,y,w,h,3,fill,fill===colors.yellow?'#ffe29a':'#598394');
     text(label,x+w/2,y+h/2,size,color,'center','700');ctx.globalAlpha=1;
+    if(gesture&&gesture.targetId===id&&!disabled)round(x+2,y+2,w-4,h-4,3,'rgba(255,255,255,0.16)');
     if(!disabled)hits.push({id,x,y,w,h,fn});
   }
   function schedule(){if(!destroyed&&!paused&&frameId===null)frameId=platform.requestFrame(drawFrame);}
@@ -328,16 +329,16 @@ export function startGame(platform) {
     const targetAt=(px,py)=>[...hits].reverse().find(h=>px>=h.x&&px<=h.x+h.w&&py>=h.y&&py<=h.y+h.h);
     if(event.type==='down'){
       if(gesture)return; // One active finger owns a tap; ignore secondary touches.
-      gesture={x,y,id:event.id,targetId:targetAt(x,y)?.id??null};return;
+      gesture={x,y,id:event.id,targetId:targetAt(x,y)?.id??null};schedule();return;
     }
     if(!gesture||gesture.id!==event.id)return;
-    if(event.type==='cancel'){gesture=null;return;}
+    if(event.type==='cancel'){gesture=null;schedule();return;}
     if(event.type==='move'){
-      if(Math.hypot(x-gesture.x,y-gesture.y)>15)gesture.targetId=null;
+      if(Math.hypot(x-gesture.x,y-gesture.y)>15){gesture.targetId=null;schedule();}
       return;
     }
     if(event.type!=='up')return;
-    const down=gesture;gesture=null;
+    const down=gesture;gesture=null;schedule();
     if(!down.targetId||Math.hypot(x-down.x,y-down.y)>15)return;
     const hit=targetAt(x,y);
     if(hit?.id!==down.targetId)return;
